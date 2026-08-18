@@ -1,0 +1,1027 @@
+<meta charset="UTF-8">
+<title>The Journey Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root {
+    --ink: #3A3226;
+    --ink-soft: #6B5E4C;
+    --cream: #FFFBF3;
+    --cream-panel: rgba(255, 251, 243, 0.88);
+    --gold: #E29A44;
+    --gold-deep: #C97F2E;
+    --sage: #7F9A6C;
+    --rose: #E2897A;
+    --dusk: #6B6C9A;
+    --page-bg-a: #FDE9C8;
+    --page-bg-b: #E7C9B8;
+    --focus-ring: #C97F2E;
+    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --font-ui: ui-rounded, "Nunito Sans", "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #F3ECDD;
+      --ink-soft: #C9BEA9;
+      --cream: #2B2536;
+      --cream-panel: rgba(43, 37, 54, 0.86);
+      --gold: #F0B268;
+      --gold-deep: #E29A44;
+      --page-bg-a: #241F35;
+      --page-bg-b: #35283A;
+      --focus-ring: #F0B268;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #F3ECDD;
+    --ink-soft: #C9BEA9;
+    --cream: #2B2536;
+    --cream-panel: rgba(43, 37, 54, 0.86);
+    --gold: #F0B268;
+    --gold-deep: #E29A44;
+    --page-bg-a: #241F35;
+    --page-bg-b: #35283A;
+    --focus-ring: #F0B268;
+  }
+  :root[data-theme="light"] {
+    --ink: #3A3226;
+    --ink-soft: #6B5E4C;
+    --cream: #FFFBF3;
+    --cream-panel: rgba(255, 251, 243, 0.88);
+    --gold: #E29A44;
+    --gold-deep: #C97F2E;
+    --page-bg-a: #FDE9C8;
+    --page-bg-b: #E7C9B8;
+    --focus-ring: #C97F2E;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  .lane-zone, .paw-btn, .pet-opt, .primary-btn, .hud-btn, .text-btn, .name-input {
+    touch-action: manipulation;
+  }
+
+  html {
+    overscroll-behavior: none;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% -10%, var(--page-bg-a), var(--page-bg-b) 70%);
+    font-family: var(--font-ui);
+    color: var(--ink);
+    padding: 20px;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .name-input, .name-input:focus {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  .frame {
+    position: relative;
+    width: min(420px, 100%);
+    height: min(760px, 92vh);
+    height: min(760px, 92svh);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(60, 40, 20, 0.35), 0 0 0 1px rgba(255,255,255,0.25) inset;
+    -webkit-touch-callout: none;
+  }
+  :root[data-theme="dark"] .frame, @media (prefers-color-scheme: dark) {
+    .frame { box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06) inset; }
+  }
+
+  /* ---------- Stage / sky ---------- */
+  #stage {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--sky-top, #FDE9C8) 0%, var(--sky-bottom, #F3C88F) 100%);
+    transition: background 1.4s ease;
+    overflow: hidden;
+  }
+  [data-theme="dark"] #stage, @media (prefers-color-scheme: dark) { #stage { filter: brightness(0.68) saturate(0.85); } }
+  :root[data-theme="dark"] #stage { filter: brightness(0.68) saturate(0.85); }
+  :root[data-theme="light"] #stage { filter: none; }
+
+  .ground {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 22%;
+    background: linear-gradient(180deg, var(--ground-color, #8FAE72) 0%, transparent 0%);
+    background-color: var(--ground-color, #8FAE72);
+    border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+    transform: scaleX(1.3) translateY(30%);
+    opacity: 0.85;
+    transition: background-color 1.4s ease;
+  }
+
+  .cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.75);
+    border-radius: 50%;
+    filter: blur(0.3px);
+  }
+  .cloud::before, .cloud::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+  }
+  .cloud-drift {
+    animation: drift linear infinite;
+  }
+  @keyframes drift {
+    from { transform: translateX(-40px); }
+    to { transform: translateX(340px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cloud-drift { animation-duration: 120s !important; }
+  }
+
+  .star {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: #FFF6DE;
+    border-radius: 50%;
+    animation: twinkle 2.6s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .star { animation: none; opacity: 0.7; }
+  }
+
+  /* ---------- HUD ---------- */
+  .hud {
+    position: absolute;
+    top: 14px; left: 14px; right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--cream-panel);
+    backdrop-filter: blur(6px);
+    border-radius: 20px;
+    padding: 9px 12px;
+    box-shadow: 0 6px 18px rgba(60,40,20,0.12);
+    z-index: 20;
+  }
+  .hud-pet {
+    font-size: 22px;
+    line-height: 1;
+  }
+  .hud-mid { flex: 1; min-width: 0; }
+  .hud-name {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .hud-level {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .hud-track {
+    height: 5px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.08);
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .hud-track-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+    border-radius: 4px;
+    transition: width 0.35s ease;
+    width: 0%;
+  }
+  .hud-love {
+    font-size: 11px;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .hud-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.06);
+    color: var(--ink);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .hud-btn:hover { background: rgba(0,0,0,0.1); }
+  .hud-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  /* ---------- Pet & items ---------- */
+  #pet {
+    position: absolute;
+    bottom: 15%;
+    font-size: 46px;
+    line-height: 1;
+    transform: translate(-50%, 0);
+    transition: left 0.22s cubic-bezier(.34,1.56,.64,1);
+    animation: idle-bounce 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 6px 6px rgba(0,0,0,0.18));
+    z-index: 10;
+    user-select: none;
+  }
+  @keyframes idle-bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -8px); }
+  }
+  #pet.step { animation: step-pulse 0.22s ease; }
+  @keyframes step-pulse {
+    0% { transform: translate(-50%, 0) scale(1); }
+    50% { transform: translate(-50%, -4px) scale(1.12); }
+    100% { transform: translate(-50%, 0) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #pet { animation: none; }
+  }
+
+  .glyph-svg {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .falling {
+    position: absolute;
+    font-size: 26px;
+    transform: translate(-50%, 0);
+    z-index: 8;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .sparkle {
+    position: absolute;
+    font-size: 14px;
+    z-index: 12;
+    pointer-events: none;
+    animation: sparkle-up 0.7s ease-out forwards;
+  }
+  @keyframes sparkle-up {
+    0% { transform: translate(-50%, 0) scale(0.6); opacity: 1; }
+    100% { transform: translate(-50%, -46px) scale(1.1); opacity: 0; }
+  }
+
+  /* ---------- Lane input zones ---------- */
+  .lanes {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    z-index: 6;
+  }
+  .lane-zone {
+    flex: 1;
+    height: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    position: absolute;
+    bottom: 16px; left: 16px; right: 16px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    z-index: 20;
+  }
+  .paw-btn {
+    flex: 1;
+    height: 50px;
+    border-radius: 18px;
+    border: none;
+    background: var(--cream-panel);
+    backdrop-filter: blur(6px);
+    font-size: 20px;
+    color: var(--ink);
+    box-shadow: 0 6px 16px rgba(60,40,20,0.14);
+    cursor: pointer;
+  }
+  .paw-btn:active { transform: translateY(1px) scale(0.97); }
+  .paw-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  /* ---------- Overlays ---------- */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 26px;
+    background: rgba(20, 14, 8, 0.34);
+    backdrop-filter: blur(3px);
+    z-index: 40;
+  }
+  :root[data-theme="dark"] .overlay { background: rgba(0,0,0,0.5); }
+
+  .card {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 28px 26px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  }
+
+  .card h1 {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 6vw, 30px);
+    font-weight: 600;
+    margin: 4px 0 6px;
+    text-wrap: balance;
+  }
+  .card p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+
+  .pet-picker {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .pet-opt {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    border: 2px solid transparent;
+    background: rgba(0,0,0,0.05);
+    font-size: 22px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pet-opt[aria-pressed="true"] {
+    border-color: var(--gold);
+    background: rgba(226, 154, 68, 0.16);
+  }
+  .pet-opt:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  .name-input {
+    width: 100%;
+    font-family: var(--font-ui);
+    font-size: 16px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(0,0,0,0.12);
+    background: rgba(0,0,0,0.03);
+    color: var(--ink);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .name-input:focus-visible, .name-input:focus {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 1px;
+  }
+  .name-input::placeholder { color: var(--ink-soft); opacity: 0.7; }
+
+  .primary-btn {
+    width: 100%;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 13px;
+    border-radius: 16px;
+    border: none;
+    background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(201, 127, 46, 0.35);
+  }
+  .primary-btn:hover { filter: brightness(1.04); }
+  .primary-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .primary-btn:active { transform: translateY(1px); }
+
+  .text-btn {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .text-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  .hidden { display: none !important; }
+
+  /* level-up toast */
+  #levelup {
+    z-index: 45;
+  }
+  #levelup .card { padding: 22px 24px; max-width: 280px; }
+  #levelup .card p { margin: 0; }
+
+  /* rainbow arc for finale */
+  .card-finale {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(120% 85% at 50% 8%, #FFE9BE 0%, var(--cream) 60%);
+  }
+  :root[data-theme="dark"] .card-finale {
+    background: radial-gradient(120% 85% at 50% 8%, #4A3A3E 0%, var(--cream) 60%);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .card-finale {
+      background: radial-gradient(120% 85% at 50% 8%, #4A3A3E 0%, var(--cream) 60%);
+    }
+  }
+  .card-finale::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: -30px;
+    width: 260px; height: 260px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(240, 178, 104, 0.55) 0%, rgba(240, 178, 104, 0) 68%);
+    pointer-events: none;
+    z-index: 0;
+    animation: glow-pulse 3.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-finale::before { animation: none; }
+  }
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 0.75; }
+    50% { opacity: 1; }
+  }
+  .card-finale > * { position: relative; z-index: 1; }
+  .arc-wrap {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    margin: 0 auto 14px;
+  }
+  .arc-band {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    border-radius: 999px 999px 0 0;
+  }
+  .arc-friend {
+    position: absolute;
+    bottom: 2px;
+    transform: translate(-50%, 0);
+    font-size: 20px;
+    opacity: 0.88;
+  }
+
+  .pause-overlay {
+    z-index: 35;
+  }
+  .pause-overlay .card { padding: 24px; }
+
+  @media (max-height: 700px) {
+    #pet { font-size: 38px; }
+    .card { padding: 20px 20px; }
+  }
+</style>
+
+<div class="frame">
+  <div id="stage">
+    <div class="ground"></div>
+    <div id="sky-decor"></div>
+    <div class="lanes">
+      <button class="lane-zone" data-lane="0" aria-label="Move to left path"></button>
+      <button class="lane-zone" data-lane="1" aria-label="Move to middle path"></button>
+      <button class="lane-zone" data-lane="2" aria-label="Move to right path"></button>
+    </div>
+    <div id="pet" aria-hidden="true">🐕</div>
+    <div id="items"></div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-pet" id="hud-pet">🐕</div>
+    <div class="hud-mid">
+      <div class="hud-name" id="hud-name">—</div>
+      <div class="hud-level" id="hud-level">Sunny Meadow</div>
+      <div class="hud-track"><div class="hud-track-fill" id="hud-fill"></div></div>
+    </div>
+    <div class="hud-love" id="hud-love">💗 0</div>
+    <button class="hud-btn" id="pause-btn" aria-label="Pause">⏸</button>
+  </div>
+
+  <div class="controls">
+    <button class="paw-btn" data-lane="0" aria-label="Move left">🐾 ←</button>
+    <button class="paw-btn" data-lane="1" aria-label="Move to middle">🐾</button>
+    <button class="paw-btn" data-lane="2" aria-label="Move right">→ 🐾</button>
+  </div>
+
+  <!-- Start screen -->
+  <div class="overlay" id="start-screen">
+    <div class="card">
+      <div style="font-size:40px;">🐾</div>
+      <h1>The Journey Home</h1>
+      <p>Guide your companion along a soft path of meadows, forests, and stars &mdash; gathering bones and a little love along the way.</p>
+      <div class="pet-picker" role="group" aria-label="Choose your companion">
+        <button class="pet-opt" data-kind="dog" aria-pressed="true" aria-label="Siberian Husky"></button>
+        <button class="pet-opt" data-kind="cat" aria-pressed="false" aria-label="Cat">🐈</button>
+        <button class="pet-opt" data-kind="rabbit" aria-pressed="false" aria-label="Rabbit">🐇</button>
+        <button class="pet-opt" data-kind="bird" aria-pressed="false" aria-label="Bird">🐦</button>
+        <button class="pet-opt" data-kind="other" aria-pressed="false" aria-label="Another kind of friend">🐾</button>
+      </div>
+      <input class="name-input" id="name-input" type="text" maxlength="18" placeholder="Their name" aria-label="Your companion's name" />
+      <button class="primary-btn" id="begin-btn">Begin the Journey</button>
+    </div>
+  </div>
+
+  <!-- Level up toast -->
+  <div class="overlay hidden" id="levelup">
+    <div class="card">
+      <div style="font-size:30px;" id="levelup-emoji">🌲</div>
+      <h1 style="font-size:19px;" id="levelup-title">Whispering Forest</h1>
+      <p id="levelup-text">The path continues.</p>
+    </div>
+  </div>
+
+  <!-- Finale -->
+  <div class="overlay hidden" id="finale">
+    <div class="card card-finale">
+      <div class="arc-wrap" id="arc-wrap"></div>
+      <h1 id="finale-title">Home</h1>
+      <p id="finale-text"></p>
+      <button class="primary-btn" id="again-btn">Walk the Path Again</button>
+      <button class="text-btn" id="new-pet-btn">Start a new journey</button>
+    </div>
+  </div>
+
+  <!-- Pause -->
+  <div class="overlay pause-overlay hidden" id="pause-screen">
+    <div class="card">
+      <div style="font-size:30px;">🐾</div>
+      <h1 style="font-size:19px;">Resting a moment</h1>
+      <p>Come back whenever you're ready. Nothing here is going anywhere.</p>
+      <button class="primary-btn" id="resume-btn">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var LEVELS = [
+    { key: "meadow", name: "Sunny Meadow", emoji: "🌼", target: 10,
+      skyTop: "#FDE9C8", skyBottom: "#F3C88F", ground: "#8FAE72", stars: 0 },
+    { key: "forest", name: "Whispering Forest", emoji: "🌲", target: 14,
+      skyTop: "#CFE3C0", skyBottom: "#8FB07A", ground: "#5D8A54", stars: 0 },
+    { key: "clouds", name: "Cloud Kingdom", emoji: "☁️", target: 18,
+      skyTop: "#EAF3FB", skyBottom: "#BFD8EC", ground: "#9FC1DE", stars: 6 },
+    { key: "stars", name: "Starlit Sky", emoji: "✨", target: 22,
+      skyTop: "#4B4C78", skyBottom: "#241F3B", ground: "#312A52", stars: 22 }
+  ];
+
+  var ARC_COLORS = ["#E2897A", "#E29A44", "#F0C265", "#8FAE72", "#6B6C9A"];
+
+  var EMOJI_BY_KIND = { cat: "🐈", rabbit: "🐇", bird: "🐦" };
+
+  var PAW_SVG =
+    '<svg class="glyph-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Another kind of friend">' +
+    '<ellipse cx="60" cy="80" rx="27" ry="21" fill="#C97F2E"/>' +
+    '<ellipse cx="28" cy="48" rx="12" ry="15" fill="#C97F2E"/>' +
+    '<ellipse cx="50" cy="30" rx="12" ry="16" fill="#C97F2E"/>' +
+    '<ellipse cx="70" cy="30" rx="12" ry="16" fill="#C97F2E"/>' +
+    '<ellipse cx="92" cy="48" rx="12" ry="15" fill="#C97F2E"/>' +
+    "</svg>";
+
+  var HUSKY_SVG =
+    '<svg class="glyph-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Siberian Husky">' +
+    '<polygon points="14,52 20,8 46,40" fill="#222225" stroke="#F4EADF" stroke-width="3" stroke-linejoin="round"/>' +
+    '<polygon points="20,46 24,20 40,40" fill="#F4EADF"/>' +
+    '<polygon points="106,52 100,8 74,40" fill="#222225" stroke="#F4EADF" stroke-width="3" stroke-linejoin="round"/>' +
+    '<polygon points="100,46 96,20 80,40" fill="#F4EADF"/>' +
+    '<ellipse cx="60" cy="70" rx="40" ry="35" fill="#222225" stroke="#F4EADF" stroke-width="3"/>' +
+    '<path d="M60,40 C50,46 46,60 48,74 C49,86 54,96 60,98 C66,96 71,86 72,74 C74,60 70,46 60,40 Z" fill="#FFFFFF"/>' +
+    '<ellipse cx="43" cy="62" rx="11" ry="9" fill="#141416" transform="rotate(-8 43 62)"/>' +
+    '<ellipse cx="77" cy="62" rx="11" ry="9" fill="#141416" transform="rotate(8 77 62)"/>' +
+    '<circle cx="44" cy="64" r="5.2" fill="#FFFFFF"/>' +
+    '<circle cx="76" cy="64" r="5.2" fill="#FFFFFF"/>' +
+    '<circle cx="44" cy="64" r="3.3" fill="#9AD6EC"/>' +
+    '<circle cx="76" cy="64" r="3.3" fill="#9AD6EC"/>' +
+    '<circle cx="44" cy="64" r="1.5" fill="#20232A"/>' +
+    '<circle cx="76" cy="64" r="1.5" fill="#20232A"/>' +
+    '<circle cx="45.4" cy="62.6" r="0.9" fill="#FFFFFF"/>' +
+    '<circle cx="74.6" cy="62.6" r="0.9" fill="#FFFFFF"/>' +
+    '<ellipse cx="60" cy="90" rx="6.5" ry="5" fill="#23252B"/>' +
+    '<path d="M50,96 Q60,102 70,96" stroke="#6B6560" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+    "</svg>";
+
+  var HUSKY_SVG_URI = "data:image/svg+xml," + encodeURIComponent(HUSKY_SVG);
+  var PAW_SVG_URI = "data:image/svg+xml," + encodeURIComponent(PAW_SVG);
+
+  function setGlyph(container, kind) {
+    container.textContent = "";
+    if (kind === "dog" || kind === "other" || !EMOJI_BY_KIND[kind]) {
+      var img = document.createElement("img");
+      img.className = "glyph-svg";
+      img.draggable = false;
+      if (kind === "dog") {
+        img.src = HUSKY_SVG_URI;
+        img.alt = "Siberian Husky";
+      } else {
+        img.src = PAW_SVG_URI;
+        img.alt = "Another kind of friend";
+      }
+      container.appendChild(img);
+    } else {
+      container.textContent = EMOJI_BY_KIND[kind];
+    }
+  }
+
+  var els = {
+    stage: document.getElementById("stage"),
+    ground: document.querySelector(".ground"),
+    skyDecor: document.getElementById("sky-decor"),
+    pet: document.getElementById("pet"),
+    items: document.getElementById("items"),
+    hudPet: document.getElementById("hud-pet"),
+    hudName: document.getElementById("hud-name"),
+    hudLevel: document.getElementById("hud-level"),
+    hudFill: document.getElementById("hud-fill"),
+    hudLove: document.getElementById("hud-love"),
+    pauseBtn: document.getElementById("pause-btn"),
+    start: document.getElementById("start-screen"),
+    nameInput: document.getElementById("name-input"),
+    beginBtn: document.getElementById("begin-btn"),
+    petOpts: Array.prototype.slice.call(document.querySelectorAll(".pet-opt")),
+    levelup: document.getElementById("levelup"),
+    levelupEmoji: document.getElementById("levelup-emoji"),
+    levelupTitle: document.getElementById("levelup-title"),
+    levelupText: document.getElementById("levelup-text"),
+    finale: document.getElementById("finale"),
+    finaleTitle: document.getElementById("finale-title"),
+    finaleText: document.getElementById("finale-text"),
+    arcWrap: document.getElementById("arc-wrap"),
+    againBtn: document.getElementById("again-btn"),
+    newPetBtn: document.getElementById("new-pet-btn"),
+    pauseScreen: document.getElementById("pause-screen"),
+    resumeBtn: document.getElementById("resume-btn"),
+    laneZones: Array.prototype.slice.call(document.querySelectorAll(".lane-zone")),
+    pawBtns: Array.prototype.slice.call(document.querySelectorAll(".paw-btn"))
+  };
+
+  var LANE_X = [16.6, 50, 83.3];
+
+  var game = {
+    running: false,
+    paused: false,
+    lane: 1,
+    levelIndex: 0,
+    progress: 0,
+    love: 0,
+    petKind: "dog",
+    petName: "",
+    lastSpawn: 0,
+    spawnInterval: 1300,
+    fallSpeed: 78,
+    lastFrame: 0,
+    fallItems: []
+  };
+
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function loadIdentity() {
+    try {
+      var name = localStorage.getItem("petJourney.name");
+      var kind = localStorage.getItem("petJourney.kind");
+      if (name) els.nameInput.value = name;
+      if (kind) selectKind(kind);
+    } catch (e) {}
+  }
+
+  function saveIdentity(name, kind) {
+    try {
+      localStorage.setItem("petJourney.name", name);
+      localStorage.setItem("petJourney.kind", kind);
+    } catch (e) {}
+  }
+
+  function selectKind(kind) {
+    els.petOpts.forEach(function (btn) {
+      var match = btn.getAttribute("data-kind") === kind;
+      btn.setAttribute("aria-pressed", match ? "true" : "false");
+    });
+    game.petKind = kind;
+  }
+
+  els.petOpts.forEach(function (btn) {
+    setGlyph(btn, btn.getAttribute("data-kind"));
+    btn.addEventListener("click", function () {
+      selectKind(btn.getAttribute("data-kind"));
+    });
+  });
+
+  function buildSkyDecor(level) {
+    els.skyDecor.innerHTML = "";
+    var cloudCount = 3;
+    for (var i = 0; i < cloudCount; i++) {
+      var c = document.createElement("div");
+      c.className = "cloud cloud-drift";
+      var size = 34 + Math.random() * 26;
+      c.style.width = size + "px";
+      c.style.height = size * 0.55 + "px";
+      c.style.top = (10 + i * 22 + Math.random() * 8) + "%";
+      c.style.left = (Math.random() * 60 - 20) + "px";
+      c.style.animationDuration = (26 + i * 9) + "s";
+      c.style.animationDelay = (-i * 7) + "s";
+      c.style.opacity = 0.55 + Math.random() * 0.3;
+      els.skyDecor.appendChild(c);
+    }
+    if (level.stars > 0) {
+      for (var s = 0; s < level.stars; s++) {
+        var star = document.createElement("div");
+        star.className = "star";
+        star.style.left = (Math.random() * 96 + 2) + "%";
+        star.style.top = (Math.random() * 55 + 3) + "%";
+        star.style.animationDelay = (Math.random() * 2.6) + "s";
+        els.skyDecor.appendChild(star);
+      }
+    }
+  }
+
+  function applyLevel(index) {
+    var level = LEVELS[index];
+    els.stage.style.setProperty("--sky-top", level.skyTop);
+    els.stage.style.setProperty("--sky-bottom", level.skyBottom);
+    els.ground.style.setProperty("--ground-color", level.ground);
+    buildSkyDecor(level);
+    els.hudLevel.textContent = level.name;
+    updateHudFill();
+  }
+
+  function updateHudFill() {
+    var level = LEVELS[game.levelIndex];
+    var pct = Math.min(100, (game.progress / level.target) * 100);
+    els.hudFill.style.width = pct + "%";
+    els.hudLove.textContent = "💗 " + game.love;
+  }
+
+  function setPetLane(lane, animate) {
+    game.lane = lane;
+    els.pet.style.left = LANE_X[lane] + "%";
+    if (animate) {
+      els.pet.classList.remove("step");
+      void els.pet.offsetWidth;
+      els.pet.classList.add("step");
+    }
+  }
+
+  function startJourney() {
+    var typedName = els.nameInput.value.trim();
+    game.petName = typedName || "your friend";
+    saveIdentity(typedName, game.petKind);
+    els.hudName.textContent = game.petName;
+    game.levelIndex = 0;
+    game.progress = 0;
+    game.love = 0;
+    game.fallItems.forEach(function (it) { it.el.remove(); });
+    game.fallItems = [];
+    setPetLane(1, false);
+    applyLevel(0);
+    hide(els.start);
+    hide(els.finale);
+    hide(els.pauseScreen);
+    game.running = true;
+    game.paused = false;
+    game.lastSpawn = 0;
+    game.lastFrame = performance.now();
+    requestAnimationFrame(loop);
+    try {
+      setGlyph(els.pet, game.petKind);
+      setGlyph(els.hudPet, game.petKind);
+    } catch (e) {}
+  }
+
+  function hide(el) { el.classList.add("hidden"); }
+  function show(el) { el.classList.remove("hidden"); }
+
+  function spawnItem() {
+    var stageH = els.stage.clientHeight;
+    var lane = Math.floor(Math.random() * 3);
+    var roll = Math.random();
+    var type = "bone";
+    if (roll > 0.9) type = "star";
+    else if (roll > 0.68) type = "heart";
+    var el = document.createElement("div");
+    el.className = "falling";
+    el.style.left = LANE_X[lane] + "%";
+    el.style.top = "-30px";
+    el.textContent = type === "bone" ? "🦴" : (type === "heart" ? "💗" : "⭐");
+    els.items.appendChild(el);
+    game.fallItems.push({ el: el, lane: lane, y: -30, type: type });
+  }
+
+  function burstSparkle(xPercent, y) {
+    for (var i = 0; i < 4; i++) {
+      var sp = document.createElement("div");
+      sp.className = "sparkle";
+      sp.textContent = "✨";
+      sp.style.left = (xPercent + (Math.random() * 10 - 5)) + "%";
+      sp.style.top = y + "px";
+      els.items.appendChild(sp);
+      (function (node) {
+        setTimeout(function () { node.remove(); }, 750);
+      })(sp);
+    }
+  }
+
+  function collect(item) {
+    item.el.remove();
+    if (item.type === "bone") {
+      game.progress++;
+    } else if (item.type === "heart") {
+      game.love += 2;
+    } else {
+      game.love += 3;
+    }
+    burstSparkle(LANE_X[item.lane], els.stage.clientHeight - 150);
+    updateHudFill();
+    var level = LEVELS[game.levelIndex];
+    if (item.type === "bone" && game.progress >= level.target) {
+      advanceLevel();
+    }
+  }
+
+  function advanceLevel() {
+    game.levelIndex++;
+    game.progress = 0;
+    if (game.levelIndex >= LEVELS.length) {
+      showFinale();
+      return;
+    }
+    var level = LEVELS[game.levelIndex];
+    applyLevel(game.levelIndex);
+    els.levelupEmoji.textContent = level.emoji;
+    els.levelupTitle.textContent = level.name;
+    els.levelupText.textContent = game.petName + " wanders on, a little further along.";
+    show(els.levelup);
+    game.paused = true;
+    setTimeout(function () {
+      hide(els.levelup);
+      game.paused = false;
+      game.lastFrame = performance.now();
+    }, 1700);
+  }
+
+  function buildArc() {
+    els.arcWrap.innerHTML = "";
+    var n = ARC_COLORS.length;
+    for (var i = 0; i < n; i++) {
+      var band = document.createElement("div");
+      band.className = "arc-band";
+      var w = 200 - i * 34;
+      var h = w / 2;
+      band.style.width = w + "px";
+      band.style.height = h + "px";
+      band.style.background = ARC_COLORS[i];
+      band.style.zIndex = String(i + 1);
+      els.arcWrap.appendChild(band);
+    }
+    var friendKinds = ["cat", "bird"];
+    var friendOffsets = [-46, 46];
+    friendKinds.forEach(function (kind, i) {
+      var f = document.createElement("div");
+      f.className = "arc-friend";
+      f.style.left = "calc(50% + " + friendOffsets[i] + "px)";
+      f.style.zIndex = "6";
+      setGlyph(f, kind);
+      els.arcWrap.appendChild(f);
+    });
+
+    var sun = document.createElement("div");
+    sun.style.position = "absolute";
+    sun.style.left = "50%";
+    sun.style.bottom = "0";
+    sun.style.transform = "translate(-50%, 0)";
+    sun.style.fontSize = "30px";
+    sun.style.zIndex = "8";
+    sun.style.filter = "drop-shadow(0 3px 8px rgba(0,0,0,0.2))";
+    setGlyph(sun, game.petKind);
+    els.arcWrap.appendChild(sun);
+  }
+
+  function showFinale() {
+    game.running = false;
+    buildArc();
+    var totalBones = LEVELS.reduce(function (s, l) { return s + l.target; }, 0);
+    els.finaleTitle.textContent = "Welcome home, " + game.petName + ".";
+    els.finaleText.textContent = "Warm light, wagging tails, and old friends came out to meet " + game.petName + " at the gate — nobody arrives alone. Every one of the " + totalBones + " bones gathered was really just a little piece of the love you gave, carried all the way there, plus " + game.love + " small moments of love besides.";
+    show(els.finale);
+  }
+
+  function loop(now) {
+    if (!game.running) return;
+    var dt = now - game.lastFrame;
+    els.hudLevel.textContent = LEVELS[game.levelIndex] ? LEVELS[game.levelIndex].name : els.hudLevel.textContent;
+
+    if (!game.paused) {
+      game.lastFrame = now;
+      game.lastSpawn += dt;
+      if (game.lastSpawn > game.spawnInterval) {
+        game.lastSpawn = 0;
+        spawnItem();
+      }
+      var stageH = els.stage.clientHeight;
+      var catchY = stageH - 128;
+      for (var i = game.fallItems.length - 1; i >= 0; i--) {
+        var item = game.fallItems[i];
+        item.y += (game.fallSpeed * dt) / 1000;
+        item.el.style.top = item.y + "px";
+        if (item.y > catchY - 26 && item.y < catchY + 30 && item.lane === game.lane) {
+          game.fallItems.splice(i, 1);
+          collect(item);
+          continue;
+        }
+        if (item.y > stageH + 20) {
+          item.el.remove();
+          game.fallItems.splice(i, 1);
+        }
+      }
+    } else {
+      game.lastFrame = now;
+    }
+    requestAnimationFrame(loop);
+  }
+
+  function moveLane(lane) {
+    if (!game.running || game.paused) return;
+    if (lane === game.lane) return;
+    setPetLane(lane, true);
+  }
+
+  els.laneZones.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      moveLane(parseInt(btn.getAttribute("data-lane"), 10));
+    });
+  });
+  els.pawBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      moveLane(parseInt(btn.getAttribute("data-lane"), 10));
+    });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!game.running) return;
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveLane(Math.max(0, game.lane - 1));
+    else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveLane(Math.min(2, game.lane + 1));
+  });
+
+  els.beginBtn.addEventListener("click", startJourney);
+  els.nameInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") startJourney();
+  });
+
+  els.pauseBtn.addEventListener("click", function () {
+    if (!game.running) return;
+    game.paused = true;
+    show(els.pauseScreen);
+  });
+  els.resumeBtn.addEventListener("click", function () {
+    hide(els.pauseScreen);
+    game.paused = false;
+    game.lastFrame = performance.now();
+  });
+
+  els.againBtn.addEventListener("click", function () {
+    hide(els.finale);
+    startJourney();
+  });
+  els.newPetBtn.addEventListener("click", function () {
+    hide(els.finale);
+    game.running = false;
+    show(els.start);
+  });
+
+  loadIdentity();
+})();
+</script>
