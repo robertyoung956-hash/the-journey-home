@@ -258,8 +258,50 @@
     50% { transform: translate(-50%, -4px) scale(1.12); }
     100% { transform: translate(-50%, 0) scale(1); }
   }
+  #pet.flinch { animation: flinch-wobble 0.4s ease; }
+  @keyframes flinch-wobble {
+    0% { transform: translate(-50%, 0) rotate(0deg); }
+    25% { transform: translate(-50%, 0) rotate(-8deg); }
+    55% { transform: translate(-50%, 0) rotate(6deg); }
+    80% { transform: translate(-50%, 0) rotate(-3deg); }
+    100% { transform: translate(-50%, 0) rotate(0deg); }
+  }
   @media (prefers-reduced-motion: reduce) {
     #pet { animation: none; }
+  }
+
+  #toast-layer {
+    position: absolute;
+    top: 74px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 88%;
+    max-width: 300px;
+    z-index: 22;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+  }
+  .hazard-toast {
+    background: var(--cream-panel);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--ink);
+    box-shadow: 0 8px 20px rgba(60,40,20,0.18);
+    text-align: center;
+    animation: toast-in-out 2.4s ease forwards;
+  }
+  @keyframes toast-in-out {
+    0% { opacity: 0; transform: translateY(-6px); }
+    12% { opacity: 1; transform: translateY(0); }
+    82% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-6px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hazard-toast { animation: none; opacity: 1; }
   }
 
   .glyph-svg {
@@ -349,9 +391,136 @@
     padding: 28px 26px;
     width: 100%;
     max-width: 340px;
+    max-height: 88vh;
+    max-height: 88svh;
+    overflow-y: auto;
     text-align: center;
     box-shadow: 0 20px 50px rgba(0,0,0,0.25);
   }
+
+  .back-link {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    cursor: pointer;
+    margin: -6px 0 10px;
+    padding: 4px 0;
+    text-align: left;
+  }
+  .back-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  .breed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    max-height: 46vh;
+    overflow-y: auto;
+    margin-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .breed-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    background: rgba(0,0,0,0.04);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .breed-opt:hover { background: rgba(0,0,0,0.07); }
+  .breed-opt:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+  .breed-swatch {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 1.5px rgba(0,0,0,0.15) inset;
+  }
+
+  .profile-glyph {
+    width: 64px; height: 64px;
+    margin: 0 auto 8px;
+  }
+  .profile-glyph .glyph-svg { width: 100%; height: 100%; }
+
+  .trait-list {
+    list-style: none;
+    margin: 0 0 14px;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .trait-list li {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    padding-left: 16px;
+    position: relative;
+  }
+  .trait-list li::before {
+    content: "";
+    position: absolute;
+    left: 2px; top: 6px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .perk-box {
+    background: rgba(226, 154, 68, 0.14);
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    text-align: left;
+    margin-bottom: 14px;
+  }
+  .perk-box b { color: var(--ink); }
+
+  .hazard-row {
+    text-align: left;
+    margin-bottom: 18px;
+  }
+  .hazard-row .hazard-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .hazard-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .hazard-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 999px;
+    padding: 5px 10px 5px 8px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .name-preview {
+    width: 52px; height: 52px;
+    margin: 0 auto 4px;
+  }
+  .name-preview .glyph-svg, .name-preview span { width: 100%; height: 100%; font-size: 40px; }
 
   .card h1 {
     font-family: var(--font-display);
@@ -519,6 +688,7 @@
     </div>
     <div id="pet" aria-hidden="true">🐕</div>
     <div id="items"></div>
+    <div id="toast-layer"></div>
   </div>
 
   <div class="hud">
@@ -540,19 +710,46 @@
 
   <!-- Start screen -->
   <div class="overlay" id="start-screen">
-    <div class="card">
-      <div style="font-size:40px;">🐾</div>
-      <h1>The Journey Home</h1>
-      <p>Guide your companion along a soft path of meadows, forests, and stars &mdash; gathering bones and a little love along the way.</p>
-      <div class="pet-picker" role="group" aria-label="Choose your companion">
-        <button class="pet-opt" data-kind="dog" aria-pressed="true" aria-label="Siberian Husky"></button>
-        <button class="pet-opt" data-kind="cat" aria-pressed="false" aria-label="Cat">🐈</button>
-        <button class="pet-opt" data-kind="rabbit" aria-pressed="false" aria-label="Rabbit">🐇</button>
-        <button class="pet-opt" data-kind="bird" aria-pressed="false" aria-label="Bird">🐦</button>
-        <button class="pet-opt" data-kind="other" aria-pressed="false" aria-label="Another kind of friend">🐾</button>
+    <div class="card" id="start-card">
+
+      <div class="step-panel" id="step-species">
+        <div style="font-size:40px;">🐾</div>
+        <h1>The Journey Home</h1>
+        <p>Guide your companion along a soft path of meadows, forests, and stars &mdash; gathering bones and a little love along the way.</p>
+        <div class="pet-picker" role="group" aria-label="Choose your companion">
+          <button class="pet-opt" data-kind="dog" aria-label="Dog"></button>
+          <button class="pet-opt" data-kind="cat" aria-label="Cat"></button>
+          <button class="pet-opt" data-kind="rabbit" aria-label="Rabbit">🐇</button>
+          <button class="pet-opt" data-kind="bird" aria-label="Bird">🐦</button>
+          <button class="pet-opt" data-kind="other" aria-label="Another kind of friend"></button>
+        </div>
       </div>
-      <input class="name-input" id="name-input" type="text" maxlength="18" placeholder="Their name" aria-label="Your companion's name" />
-      <button class="primary-btn" id="begin-btn">Begin the Journey</button>
+
+      <div class="step-panel hidden" id="step-breed">
+        <button class="back-link">&larr; Back</button>
+        <h1 id="breed-step-title" style="font-size:20px;">What kind?</h1>
+        <p>Pick whichever fits best &mdash; or choose Mixed if none quite match.</p>
+        <div class="breed-list" id="breed-list" role="listbox" aria-label="Choose a breed"></div>
+      </div>
+
+      <div class="step-panel hidden" id="step-profile">
+        <button class="back-link">&larr; Back</button>
+        <div class="profile-glyph" id="profile-glyph"></div>
+        <h1 id="profile-name" style="font-size:20px;">Breed name</h1>
+        <ul class="trait-list" id="profile-traits"></ul>
+        <div class="perk-box" id="profile-perk"></div>
+        <div class="hazard-row" id="profile-hazards"></div>
+        <button class="primary-btn" id="profile-continue">Continue</button>
+      </div>
+
+      <div class="step-panel hidden" id="step-name">
+        <button class="back-link">&larr; Back</button>
+        <div class="name-preview" id="name-preview"></div>
+        <h1 style="font-size:22px;">What's their name?</h1>
+        <input class="name-input" id="name-input" type="text" maxlength="18" placeholder="Their name" aria-label="Your companion's name" />
+        <button class="primary-btn" id="begin-btn">Begin the Journey</button>
+      </div>
+
     </div>
   </div>
 
@@ -604,7 +801,7 @@
 
   var ARC_COLORS = ["#E2897A", "#E29A44", "#F0C265", "#8FAE72", "#6B6C9A"];
 
-  var EMOJI_BY_KIND = { cat: "🐈", rabbit: "🐇", bird: "🐦" };
+  var EMOJI_BY_KIND = { rabbit: "🐇", bird: "🐦" };
 
   var PAW_SVG =
     '<svg class="glyph-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Another kind of friend">' +
@@ -615,47 +812,184 @@
     '<ellipse cx="92" cy="48" rx="12" ry="15" fill="#C97F2E"/>' +
     "</svg>";
 
-  var HUSKY_SVG =
-    '<svg class="glyph-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Siberian Husky">' +
-    '<polygon points="14,52 20,8 46,40" fill="#222225" stroke="#F4EADF" stroke-width="3" stroke-linejoin="round"/>' +
-    '<polygon points="20,46 24,20 40,40" fill="#F4EADF"/>' +
-    '<polygon points="106,52 100,8 74,40" fill="#222225" stroke="#F4EADF" stroke-width="3" stroke-linejoin="round"/>' +
-    '<polygon points="100,46 96,20 80,40" fill="#F4EADF"/>' +
-    '<ellipse cx="60" cy="70" rx="40" ry="35" fill="#222225" stroke="#F4EADF" stroke-width="3"/>' +
-    '<path d="M60,40 C50,46 46,60 48,74 C49,86 54,96 60,98 C66,96 71,86 72,74 C74,60 70,46 60,40 Z" fill="#FFFFFF"/>' +
-    '<ellipse cx="43" cy="62" rx="11" ry="9" fill="#141416" transform="rotate(-8 43 62)"/>' +
-    '<ellipse cx="77" cy="62" rx="11" ry="9" fill="#141416" transform="rotate(8 77 62)"/>' +
-    '<circle cx="44" cy="64" r="5.2" fill="#FFFFFF"/>' +
-    '<circle cx="76" cy="64" r="5.2" fill="#FFFFFF"/>' +
-    '<circle cx="44" cy="64" r="3.3" fill="#9AD6EC"/>' +
-    '<circle cx="76" cy="64" r="3.3" fill="#9AD6EC"/>' +
-    '<circle cx="44" cy="64" r="1.5" fill="#20232A"/>' +
-    '<circle cx="76" cy="64" r="1.5" fill="#20232A"/>' +
-    '<circle cx="45.4" cy="62.6" r="0.9" fill="#FFFFFF"/>' +
-    '<circle cx="74.6" cy="62.6" r="0.9" fill="#FFFFFF"/>' +
-    '<ellipse cx="60" cy="90" rx="6.5" ry="5" fill="#23252B"/>' +
-    '<path d="M50,96 Q60,102 70,96" stroke="#6B6560" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
-    "</svg>";
+  function dogGlyphSVG(c) {
+    return '<svg class="glyph-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">' +
+      '<polygon points="14,52 20,8 46,40" fill="' + c.coat + '" stroke="' + c.outline + '" stroke-width="3" stroke-linejoin="round"/>' +
+      '<polygon points="20,46 24,20 40,40" fill="' + c.earInner + '"/>' +
+      '<polygon points="106,52 100,8 74,40" fill="' + c.coat + '" stroke="' + c.outline + '" stroke-width="3" stroke-linejoin="round"/>' +
+      '<polygon points="100,46 96,20 80,40" fill="' + c.earInner + '"/>' +
+      '<ellipse cx="60" cy="70" rx="40" ry="35" fill="' + c.coat + '" stroke="' + c.outline + '" stroke-width="3"/>' +
+      '<path d="M60,40 C50,46 46,60 48,74 C49,86 54,96 60,98 C66,96 71,86 72,74 C74,60 70,46 60,40 Z" fill="' + c.earInner + '"/>' +
+      '<ellipse cx="43" cy="62" rx="11" ry="9" fill="' + c.mask + '" transform="rotate(-8 43 62)"/>' +
+      '<ellipse cx="77" cy="62" rx="11" ry="9" fill="' + c.mask + '" transform="rotate(8 77 62)"/>' +
+      '<circle cx="44" cy="64" r="5.2" fill="#FFFFFF"/>' +
+      '<circle cx="76" cy="64" r="5.2" fill="#FFFFFF"/>' +
+      '<circle cx="44" cy="64" r="3.3" fill="' + c.eye + '"/>' +
+      '<circle cx="76" cy="64" r="3.3" fill="' + c.eye + '"/>' +
+      '<circle cx="44" cy="64" r="1.5" fill="#20232A"/>' +
+      '<circle cx="76" cy="64" r="1.5" fill="#20232A"/>' +
+      '<circle cx="45.4" cy="62.6" r="0.9" fill="#FFFFFF"/>' +
+      '<circle cx="74.6" cy="62.6" r="0.9" fill="#FFFFFF"/>' +
+      '<ellipse cx="60" cy="90" rx="6.5" ry="5" fill="#23252B"/>' +
+      '<path d="M50,96 Q60,102 70,96" stroke="' + c.outline + '" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+      "</svg>";
+  }
 
-  var HUSKY_SVG_URI = "data:image/svg+xml," + encodeURIComponent(HUSKY_SVG);
-  var PAW_SVG_URI = "data:image/svg+xml," + encodeURIComponent(PAW_SVG);
+  function catGlyphSVG(c) {
+    var earColor = c.earOuter || c.coat;
+    return '<svg class="glyph-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">' +
+      '<polygon points="24,46 30,10 52,38" fill="' + earColor + '" stroke="' + c.outline + '" stroke-width="3" stroke-linejoin="round"/>' +
+      '<polygon points="30,40 33,22 46,38" fill="' + c.earInner + '"/>' +
+      '<polygon points="96,46 90,10 68,38" fill="' + earColor + '" stroke="' + c.outline + '" stroke-width="3" stroke-linejoin="round"/>' +
+      '<polygon points="90,40 87,22 74,38" fill="' + c.earInner + '"/>' +
+      '<ellipse cx="60" cy="68" rx="37" ry="32" fill="' + c.coat + '" stroke="' + c.outline + '" stroke-width="3"/>' +
+      '<ellipse cx="60" cy="82" rx="21" ry="15" fill="' + c.muzzle + '"/>' +
+      '<ellipse cx="45" cy="63" rx="7" ry="5" fill="#FFFFFF" transform="rotate(-12 45 63)"/>' +
+      '<ellipse cx="75" cy="63" rx="7" ry="5" fill="#FFFFFF" transform="rotate(12 75 63)"/>' +
+      '<circle cx="45" cy="63" r="4" fill="' + c.eye + '"/>' +
+      '<circle cx="75" cy="63" r="4" fill="' + c.eye + '"/>' +
+      '<ellipse cx="45" cy="63" rx="1.1" ry="3.4" fill="#191919"/>' +
+      '<ellipse cx="75" cy="63" rx="1.1" ry="3.4" fill="#191919"/>' +
+      '<circle cx="46.4" cy="61.2" r="1" fill="#FFFFFF"/>' +
+      '<circle cx="76.4" cy="61.2" r="1" fill="#FFFFFF"/>' +
+      '<path d="M55,80 L65,80 L60,86 Z" fill="#E8907E"/>' +
+      '<path d="M60,86 Q54,92 48,88 M60,86 Q66,92 72,88" stroke="' + c.outline + '" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '<path d="M38,84 L14,80 M38,88 L12,89 M38,92 L14,98" stroke="' + c.outline + '" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.55"/>' +
+      '<path d="M82,84 L106,80 M82,88 L108,89 M82,92 L106,98" stroke="' + c.outline + '" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.55"/>' +
+      "</svg>";
+  }
 
-  function setGlyph(container, kind) {
+  var DOG_BREEDS = [
+    { name: "Siberian Husky",
+      colors: { coat: "#222225", earInner: "#F4EADF", mask: "#141416", eye: "#9AD6EC", outline: "#F4EADF" },
+      traits: ["Thick double coat, sheds heavily twice a year", "“Talks” with howls and playful noises instead of barking", "Loves everyone — makes a terrible guard dog", "Bred to run, so needs lots of daily exercise"],
+      perk: { label: "Built to Run", desc: "Moves between paths a little quicker.", key: "laneSpeed", value: 0.72 } },
+    { name: "Labrador Retriever",
+      colors: { coat: "#D9A15C", earInner: "#F4E9D8", mask: "#B9824A", eye: "#6B4A2E", outline: "#6B4A2E" },
+      traits: ["Short, dense, water-resistant coat", "Famously food-motivated and eager to please", "Friendly with just about everyone", "Loves to fetch and carry things around"],
+      perk: { label: "Food Motivated", desc: "A little more forgiving when catching treats.", key: "catchWindow", value: 14 } },
+    { name: "German Shepherd",
+      colors: { coat: "#3A2E22", earInner: "#C79355", mask: "#241B14", eye: "#8A5A2E", outline: "#C79355" },
+      traits: ["Dense double coat, often tan with a black saddle", "Whip-smart and eager to learn new things", "Loyal and protective of their people", "Needs a job to do — thrives with training"],
+      perk: { label: "Quick Learner", desc: "Lucky stars show up a little more often.", key: "starRate", value: 0.08 } },
+    { name: "Poodle",
+      colors: { coat: "#E3B77E", earInner: "#FBF3E3", mask: "#B98A4E", eye: "#3A2A1E", outline: "#3A2A1E" },
+      traits: ["Dense, curly, low-shedding coat", "One of the most intelligent dog breeds", "Elegant, athletic, and eager to please", "Loves mental challenges and games"],
+      perk: { label: "Sharp & Clever", desc: "Lucky stars show up a little more often.", key: "starRate", value: 0.08 } },
+    { name: "Beagle",
+      colors: { coat: "#C88A4E", earInner: "#F4EADF", mask: "#241B14", eye: "#5A3B22", outline: "#5A3B22" },
+      traits: ["Short coat, classic tri-color markings", "Nose always to the ground, led by scent", "Friendly, curious, and a little stubborn", "Known for a big, musical howl"],
+      perk: { label: "Nose Knows", desc: "A little more forgiving when catching bones.", key: "catchWindow", value: 14 } },
+    { name: "Dachshund",
+      colors: { coat: "#A85A2E", earInner: "#EBD3B8", mask: "#6B3618", eye: "#3A2214", outline: "#6B3618" },
+      traits: ["Long body, short legs, bold personality", "Originally bred to hunt — brave and determined", "Playful and loyal to their favorite people", "Can be surprisingly stubborn"],
+      perk: { label: "Surprisingly Speedy", desc: "Moves between paths a little quicker.", key: "laneSpeed", value: 0.85 } },
+    { name: "Chihuahua",
+      colors: { coat: "#D2A46B", earInner: "#F4EADF", mask: "#8A5F35", eye: "#3A2618", outline: "#5A3B22" },
+      traits: ["Tiny body, enormous personality", "Fiercely loyal to their favorite person", "Alert, sassy, and always keeping watch", "One of the smallest dog breeds in the world"],
+      perk: { label: "Big Heart, Small Package", desc: "Every heart is worth a little extra.", key: "heartValue", value: 3 } },
+    { name: "Border Collie",
+      colors: { coat: "#232326", earInner: "#F4EADF", mask: "#141416", eye: "#6B4A2E", outline: "#F4EADF" },
+      traits: ["Medium double coat, often black and white", "Widely considered the smartest dog breed", "Extremely high energy, needs a job to do", "Natural herding instinct — loves a routine"],
+      perk: { label: "Whip Smart", desc: "Lucky stars show up noticeably more often.", key: "starRate", value: 0.1 } },
+    { name: "Golden Retriever",
+      colors: { coat: "#D9A85E", earInner: "#F6ECD8", mask: "#B9824A", eye: "#6B4A2E", outline: "#6B4A2E" },
+      traits: ["Dense, water-repellent golden coat", "Gentle, friendly, and endlessly patient", "Loves to carry things around in their mouth", "Great with families and other animals"],
+      perk: { label: "Gentle & Patient", desc: "A little more forgiving when catching treats.", key: "catchWindow", value: 14 } },
+    { name: "French Bulldog",
+      colors: { coat: "#C99A66", earInner: "#F4EADF", mask: "#8A6238", eye: "#3A2A20", outline: "#5A3B22" },
+      traits: ["Short smooth coat, signature “bat ears”", "Playful, affectionate, and a bit of a clown", "Lower energy — happy with short walks", "Big personality in a compact body"],
+      perk: { label: "Big Personality", desc: "Every heart is worth a little extra.", key: "heartValue", value: 3 } },
+    { name: "Mixed / Not Listed",
+      colors: { coat: "#B98A5E", earInner: "#F4EADF", mask: "#7A5A3A", eye: "#4A3220", outline: "#4A3220" },
+      traits: ["Every mix is a one-of-a-kind blend", "Their own perfect combination of looks and personality", "However they came to be, they're unmistakably them"],
+      perk: { label: "One of a Kind", desc: "A gentle bonus to everything they catch.", key: "heartValue", value: 3 } }
+  ];
+
+  var CAT_BREEDS = [
+    { name: "Domestic Shorthair",
+      colors: { coat: "#C97A3E", earInner: "#F0C4B8", muzzle: "#EAD9C6", eye: "#6B9A5E", outline: "#5A3A22" },
+      traits: ["Coat and color can be anything — every one is unique", "Adaptable, playful, and full of personality", "The most common (and most beloved) cat in the world"],
+      perk: { label: "Wonderfully Unpredictable", desc: "A gentle bonus to everything they catch.", key: "heartValue", value: 3 } },
+    { name: "Maine Coon",
+      colors: { coat: "#8A6A48", earInner: "#EAD9C6", muzzle: "#D8C3A5", eye: "#C4922E", outline: "#4A3520" },
+      traits: ["One of the largest domestic cat breeds", "Gentle giant — good with people and dogs", "Chirps and trills instead of a typical meow"],
+      perk: { label: "Gentle Giant", desc: "A little more forgiving when catching treats.", key: "catchWindow", value: 14 } },
+    { name: "Siamese",
+      colors: { coat: "#EDE2C8", earOuter: "#4A3A2E", earInner: "#DCC9A8", muzzle: "#F4ECDC", eye: "#6EC0E0", outline: "#4A3A2E" },
+      traits: ["Pale coat with darker “points” on ears, face, and tail", "Extremely vocal — loves a good conversation", "Bonds intensely with their favorite person"],
+      perk: { label: "Ever So Chatty", desc: "A gentle bonus to everything they catch.", key: "heartValue", value: 3 } },
+    { name: "Persian",
+      colors: { coat: "#F0E8D8", earInner: "#FBF6EC", muzzle: "#FAF4E6", eye: "#B5651D", outline: "#9A8A72" },
+      traits: ["Long, luxurious coat that needs regular brushing", "Calm, sweet, and happiest lounging nearby", "One of the oldest known cat breeds"],
+      perk: { label: "Calm & Sweet", desc: "A little more forgiving when catching treats.", key: "catchWindow", value: 14 } },
+    { name: "Ragdoll",
+      colors: { coat: "#EDE5D5", earOuter: "#6B5A4A", earInner: "#DCC9A8", muzzle: "#F4EEDD", eye: "#7EC8E8", outline: "#6B5A4A" },
+      traits: ["Semi-long silky coat, striking blue eyes", "Famously goes limp and relaxed when held", "Gentle, affectionate, and people-focused"],
+      perk: { label: "Goes Limp with Love", desc: "A gentle bonus to everything they catch.", key: "heartValue", value: 3 } },
+    { name: "Bengal",
+      colors: { coat: "#C4863E", earInner: "#EAD3B8", muzzle: "#E3C6A0", eye: "#8AA84A", outline: "#4A3524" },
+      traits: ["Wild-looking spotted or marbled coat", "Athletic, energetic, and loves to climb", "Many Bengals genuinely enjoy playing in water"],
+      perk: { label: "Wild at Heart", desc: "Moves between paths a little quicker.", key: "laneSpeed", value: 0.75 } },
+    { name: "British Shorthair",
+      colors: { coat: "#8C93A0", earInner: "#C7CBD3", muzzle: "#B5BAC4", eye: "#C4832E", outline: "#5A606C" },
+      traits: ["Dense, plush coat and a round, dignified face", "Easygoing, independent, not overly clingy", "Calm nature that suits a relaxed home"],
+      perk: { label: "Cool & Collected", desc: "A gentle bonus to everything they catch.", key: "heartValue", value: 3 } },
+    { name: "Sphynx",
+      colors: { coat: "#D9B79A", earInner: "#EAD3BE", muzzle: "#E6C9AE", eye: "#A0A85E", outline: "#8A6A52" },
+      traits: ["Little to no fur — loves warm, sunny spots", "Extremely affectionate and attention-seeking", "Energetic, mischievous, always close by"],
+      perk: { label: "All About Love", desc: "A gentle bonus to everything they catch.", key: "heartValue", value: 3 } },
+    { name: "Scottish Fold",
+      colors: { coat: "#9A8D7C", earInner: "#D8CBB8", muzzle: "#C9BCA8", eye: "#C4922E", outline: "#5A4E3E" },
+      traits: ["Distinctive folded ears and a round face", "Sweet-tempered, adaptable, easy to live with", "Known for sitting in funny, relaxed positions"],
+      perk: { label: "Sweet & Easygoing", desc: "A little more forgiving when catching treats.", key: "catchWindow", value: 14 } },
+    { name: "Abyssinian",
+      colors: { coat: "#A8623A", earInner: "#E3C3A8", muzzle: "#D9B191", eye: "#B8862E", outline: "#4A2F1C" },
+      traits: ["Short, ticked coat that shimmers with color", "Highly active, curious, playful into adulthood", "Loves climbing to the highest spot in the room"],
+      perk: { label: "Endless Curiosity", desc: "Lucky stars show up a little more often.", key: "starRate", value: 0.08 } },
+    { name: "Mixed / Not Listed",
+      colors: { coat: "#C4915E", earInner: "#EAD3B8", muzzle: "#E3C6A0", eye: "#6B9A5E", outline: "#4A3220" },
+      traits: ["Every mixed cat is an original work of art", "Their own perfect combination of looks and personality", "However they came to be, they're unmistakably them"],
+      perk: { label: "One of a Kind", desc: "A gentle bonus to everything they catch.", key: "heartValue", value: 3 } }
+  ];
+
+  var HAZARDS_BY_SPECIES = {
+    dog: [
+      { emoji: "🍫", name: "Chocolate", blurb: "Chocolate isn't safe for dogs to eat." },
+      { emoji: "🍇", name: "Grapes", blurb: "Even a few grapes can be dangerous for dogs." },
+      { emoji: "🧅", name: "Onions", blurb: "Onions and garlic aren't safe for dogs." }
+    ],
+    cat: [
+      { emoji: "🌷", name: "Lilies", blurb: "Lilies are surprisingly dangerous for cats." },
+      { emoji: "🍫", name: "Chocolate", blurb: "Chocolate isn't safe for cats either." },
+      { emoji: "🧶", name: "Loose string", blurb: "String and yarn can be a sneaky hazard." }
+    ]
+  };
+
+  var glyphURICache = {};
+  function glyphURI(kind, breed) {
+    var key = kind + (breed ? ":" + breed.name : "");
+    if (glyphURICache[key]) return glyphURICache[key];
+    var markup;
+    if (kind === "dog") markup = dogGlyphSVG(breed.colors);
+    else if (kind === "cat") markup = catGlyphSVG(breed.colors);
+    else markup = PAW_SVG;
+    var uri = "data:image/svg+xml," + encodeURIComponent(markup);
+    glyphURICache[key] = uri;
+    return uri;
+  }
+
+  function setGlyph(container, kind, breed) {
     container.textContent = "";
-    if (kind === "dog" || kind === "other" || !EMOJI_BY_KIND[kind]) {
+    if (kind === "dog" || kind === "cat" || kind === "other") {
       var img = document.createElement("img");
       img.className = "glyph-svg";
       img.draggable = false;
-      if (kind === "dog") {
-        img.src = HUSKY_SVG_URI;
-        img.alt = "Siberian Husky";
-      } else {
-        img.src = PAW_SVG_URI;
-        img.alt = "Another kind of friend";
-      }
+      img.src = glyphURI(kind, breed);
+      img.alt = breed ? breed.name : (kind === "other" ? "Another kind of friend" : kind);
       container.appendChild(img);
     } else {
-      container.textContent = EMOJI_BY_KIND[kind];
+      container.textContent = EMOJI_BY_KIND[kind] || "🐾";
     }
   }
 
@@ -665,6 +999,7 @@
     skyDecor: document.getElementById("sky-decor"),
     pet: document.getElementById("pet"),
     items: document.getElementById("items"),
+    toastLayer: document.getElementById("toast-layer"),
     hudPet: document.getElementById("hud-pet"),
     hudName: document.getElementById("hud-name"),
     hudLevel: document.getElementById("hud-level"),
@@ -675,6 +1010,17 @@
     nameInput: document.getElementById("name-input"),
     beginBtn: document.getElementById("begin-btn"),
     petOpts: Array.prototype.slice.call(document.querySelectorAll(".pet-opt")),
+    startCard: document.getElementById("start-card"),
+    breedStepTitle: document.getElementById("breed-step-title"),
+    breedList: document.getElementById("breed-list"),
+    profileGlyph: document.getElementById("profile-glyph"),
+    profileName: document.getElementById("profile-name"),
+    profileTraits: document.getElementById("profile-traits"),
+    profilePerk: document.getElementById("profile-perk"),
+    profileHazards: document.getElementById("profile-hazards"),
+    profileContinueBtn: document.getElementById("profile-continue"),
+    namePreview: document.getElementById("name-preview"),
+    backLinks: Array.prototype.slice.call(document.querySelectorAll(".back-link")),
     levelup: document.getElementById("levelup"),
     levelupEmoji: document.getElementById("levelup-emoji"),
     levelupTitle: document.getElementById("levelup-title"),
@@ -701,7 +1047,14 @@
     progress: 0,
     love: 0,
     petKind: "dog",
+    breed: null,
     petName: "",
+    perk: null,
+    hazards: null,
+    laneSpeedMult: 1,
+    catchBonus: 0,
+    starRateBonus: 0,
+    heartValue: 2,
     lastSpawn: 0,
     spawnInterval: 1300,
     fallSpeed: 78,
@@ -714,31 +1067,95 @@
   function loadIdentity() {
     try {
       var name = localStorage.getItem("petJourney.name");
-      var kind = localStorage.getItem("petJourney.kind");
       if (name) els.nameInput.value = name;
-      if (kind) selectKind(kind);
     } catch (e) {}
   }
 
-  function saveIdentity(name, kind) {
+  function saveIdentity(name) {
     try {
       localStorage.setItem("petJourney.name", name);
-      localStorage.setItem("petJourney.kind", kind);
     } catch (e) {}
   }
 
-  function selectKind(kind) {
-    els.petOpts.forEach(function (btn) {
-      var match = btn.getAttribute("data-kind") === kind;
-      btn.setAttribute("aria-pressed", match ? "true" : "false");
+  var stepStack = [];
+  function showStep(id, push) {
+    var current = document.querySelector(".step-panel:not(.hidden)");
+    if (current && push !== false && current.id !== id) stepStack.push(current.id);
+    document.querySelectorAll(".step-panel").forEach(function (p) { p.classList.add("hidden"); });
+    document.getElementById(id).classList.remove("hidden");
+    els.startCard.scrollTop = 0;
+  }
+  function stepBack() {
+    var prev = stepStack.pop();
+    showStep(prev || "step-species", false);
+  }
+  els.backLinks.forEach(function (btn) { btn.addEventListener("click", stepBack); });
+
+  function renderBreedList(kind) {
+    var breeds = kind === "dog" ? DOG_BREEDS : CAT_BREEDS;
+    els.breedStepTitle.textContent = "What kind of " + kind + "?";
+    els.breedList.innerHTML = "";
+    breeds.forEach(function (breed) {
+      var btn = document.createElement("button");
+      btn.className = "breed-opt";
+      btn.type = "button";
+      btn.setAttribute("role", "option");
+      var swatch = document.createElement("span");
+      swatch.className = "breed-swatch";
+      swatch.style.background = breed.colors.coat;
+      var label = document.createElement("span");
+      label.textContent = breed.name;
+      btn.appendChild(swatch);
+      btn.appendChild(label);
+      btn.addEventListener("click", function () {
+        game.breed = breed;
+        renderProfile(kind, breed);
+        showStep("step-profile");
+      });
+      els.breedList.appendChild(btn);
     });
-    game.petKind = kind;
   }
 
+  function renderProfile(kind, breed) {
+    els.profileGlyph.innerHTML = "";
+    setGlyph(els.profileGlyph, kind, breed);
+    els.profileName.textContent = breed.name;
+    els.profileTraits.innerHTML = "";
+    breed.traits.forEach(function (t) {
+      var li = document.createElement("li");
+      li.textContent = t;
+      els.profileTraits.appendChild(li);
+    });
+    els.profilePerk.innerHTML = "<b>✨ Perk: " + breed.perk.label + "</b><br>" + breed.perk.desc;
+    var hazards = HAZARDS_BY_SPECIES[kind] || [];
+    var chipsHtml = hazards.map(function (h) {
+      return '<span class="hazard-chip">' + h.emoji + " " + h.name + "</span>";
+    }).join("");
+    els.profileHazards.innerHTML = '<span class="hazard-label">Keep away from</span><div class="hazard-chips">' + chipsHtml + "</div>";
+  }
+
+  function goToNameStep() {
+    els.namePreview.innerHTML = "";
+    setGlyph(els.namePreview, game.petKind, game.breed);
+    showStep("step-name");
+    els.nameInput.focus();
+  }
+
+  els.profileContinueBtn.addEventListener("click", goToNameStep);
+
   els.petOpts.forEach(function (btn) {
-    setGlyph(btn, btn.getAttribute("data-kind"));
+    var kind = btn.getAttribute("data-kind");
+    setGlyph(btn, kind, kind === "dog" || kind === "cat" ? (kind === "dog" ? DOG_BREEDS[0] : CAT_BREEDS[0]) : null);
     btn.addEventListener("click", function () {
-      selectKind(btn.getAttribute("data-kind"));
+      game.petKind = kind;
+      if (kind === "dog" || kind === "cat") {
+        game.breed = null;
+        renderBreedList(kind);
+        showStep("step-breed");
+      } else {
+        game.breed = null;
+        goToNameStep();
+      }
     });
   });
 
@@ -800,13 +1217,29 @@
   function startJourney() {
     var typedName = els.nameInput.value.trim();
     game.petName = typedName || "your friend";
-    saveIdentity(typedName, game.petKind);
+    saveIdentity(typedName);
     els.hudName.textContent = game.petName;
     game.levelIndex = 0;
     game.progress = 0;
     game.love = 0;
     game.fallItems.forEach(function (it) { it.el.remove(); });
     game.fallItems = [];
+    els.toastLayer.innerHTML = "";
+
+    game.perk = game.breed ? game.breed.perk : null;
+    game.hazards = (game.petKind === "dog" || game.petKind === "cat") ? HAZARDS_BY_SPECIES[game.petKind] : null;
+    game.laneSpeedMult = 1;
+    game.catchBonus = 0;
+    game.starRateBonus = 0;
+    game.heartValue = 2;
+    if (game.perk) {
+      if (game.perk.key === "laneSpeed") game.laneSpeedMult = game.perk.value;
+      else if (game.perk.key === "catchWindow") game.catchBonus = game.perk.value;
+      else if (game.perk.key === "starRate") game.starRateBonus = game.perk.value;
+      else if (game.perk.key === "heartValue") game.heartValue = game.perk.value;
+    }
+    els.pet.style.transitionDuration = (0.22 * game.laneSpeedMult) + "s";
+
     setPetLane(1, false);
     applyLevel(0);
     hide(els.start);
@@ -818,8 +1251,8 @@
     game.lastFrame = performance.now();
     requestAnimationFrame(loop);
     try {
-      setGlyph(els.pet, game.petKind);
-      setGlyph(els.hudPet, game.petKind);
+      setGlyph(els.pet, game.petKind, game.breed);
+      setGlyph(els.hudPet, game.petKind, game.breed);
     } catch (e) {}
   }
 
@@ -827,19 +1260,43 @@
   function show(el) { el.classList.remove("hidden"); }
 
   function spawnItem() {
-    var stageH = els.stage.clientHeight;
     var lane = Math.floor(Math.random() * 3);
     var roll = Math.random();
     var type = "bone";
-    if (roll > 0.9) type = "star";
-    else if (roll > 0.68) type = "heart";
+    var hazard = null;
+    if (game.hazards && game.levelIndex >= 1 && roll < 0.12) {
+      type = "hazard";
+      hazard = game.hazards[Math.floor(Math.random() * game.hazards.length)];
+    } else if (roll > 0.9 - game.starRateBonus) {
+      type = "star";
+    } else if (roll > 0.68) {
+      type = "heart";
+    }
     var el = document.createElement("div");
     el.className = "falling";
     el.style.left = LANE_X[lane] + "%";
     el.style.top = "-30px";
-    el.textContent = type === "bone" ? "🦴" : (type === "heart" ? "💗" : "⭐");
+    el.textContent = type === "bone" ? "🦴" : type === "heart" ? "💗" : type === "star" ? "⭐" : hazard.emoji;
     els.items.appendChild(el);
-    game.fallItems.push({ el: el, lane: lane, y: -30, type: type });
+    game.fallItems.push({ el: el, lane: lane, y: -30, type: type, hazard: hazard });
+  }
+
+  function showHazardToast(hazard) {
+    var toast = document.createElement("div");
+    toast.className = "hazard-toast";
+    toast.textContent = hazard.emoji + " " + hazard.blurb;
+    els.toastLayer.innerHTML = "";
+    els.toastLayer.appendChild(toast);
+    setTimeout(function () {
+      if (toast.parentNode) toast.remove();
+    }, 2400);
+  }
+
+  function hazardCaught(hazard) {
+    els.pet.classList.remove("flinch");
+    void els.pet.offsetWidth;
+    els.pet.classList.add("flinch");
+    showHazardToast(hazard);
   }
 
   function burstSparkle(xPercent, y) {
@@ -858,10 +1315,14 @@
 
   function collect(item) {
     item.el.remove();
+    if (item.type === "hazard") {
+      hazardCaught(item.hazard);
+      return;
+    }
     if (item.type === "bone") {
       game.progress++;
     } else if (item.type === "heart") {
-      game.love += 2;
+      game.love += game.heartValue;
     } else {
       game.love += 3;
     }
@@ -915,7 +1376,7 @@
       f.className = "arc-friend";
       f.style.left = "calc(50% + " + friendOffsets[i] + "px)";
       f.style.zIndex = "6";
-      setGlyph(f, kind);
+      setGlyph(f, kind, kind === "cat" ? CAT_BREEDS[0] : null);
       els.arcWrap.appendChild(f);
     });
 
@@ -927,7 +1388,7 @@
     sun.style.fontSize = "30px";
     sun.style.zIndex = "8";
     sun.style.filter = "drop-shadow(0 3px 8px rgba(0,0,0,0.2))";
-    setGlyph(sun, game.petKind);
+    setGlyph(sun, game.petKind, game.breed);
     els.arcWrap.appendChild(sun);
   }
 
@@ -958,7 +1419,7 @@
         var item = game.fallItems[i];
         item.y += (game.fallSpeed * dt) / 1000;
         item.el.style.top = item.y + "px";
-        if (item.y > catchY - 26 && item.y < catchY + 30 && item.lane === game.lane) {
+        if (item.y > catchY - 26 - game.catchBonus && item.y < catchY + 30 + game.catchBonus && item.lane === game.lane) {
           game.fallItems.splice(i, 1);
           collect(item);
           continue;
@@ -1019,6 +1480,8 @@
   els.newPetBtn.addEventListener("click", function () {
     hide(els.finale);
     game.running = false;
+    stepStack = [];
+    showStep("step-species", false);
     show(els.start);
   });
 
