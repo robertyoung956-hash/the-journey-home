@@ -238,11 +238,11 @@
   /* ---------- Pet & items ---------- */
   #pet {
     position: absolute;
-    bottom: 15%;
+    left: 50%;
+    bottom: calc(20% + 50px);
     font-size: 46px;
     line-height: 1;
     transform: translate(-50%, 0);
-    transition: left 0.22s cubic-bezier(.34,1.56,.64,1);
     animation: idle-bounce 1.8s ease-in-out infinite;
     filter: drop-shadow(0 6px 6px rgba(0,0,0,0.18));
     z-index: 10;
@@ -311,15 +311,6 @@
     vertical-align: middle;
   }
 
-  .falling {
-    position: absolute;
-    font-size: 26px;
-    transform: translate(-50%, 0);
-    z-index: 8;
-    pointer-events: none;
-    user-select: none;
-  }
-
   .sparkle {
     position: absolute;
     font-size: 14px;
@@ -332,44 +323,73 @@
     100% { transform: translate(-50%, -46px) scale(1.1); opacity: 0; }
   }
 
-  /* ---------- Lane input zones ---------- */
-  .lanes {
+  /* ---------- Tile track ---------- */
+  .tile-track-wrap {
     position: absolute;
-    inset: 0;
-    display: flex;
+    left: 50%;
+    bottom: 20%;
+    transform: translateX(-50%);
+    width: 230px;
+    height: 58px;
+    overflow: hidden;
     z-index: 6;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%);
   }
-  .lane-zone {
-    flex: 1;
-    height: 100%;
-    background: transparent;
-    border: none;
-    cursor: pointer;
+  .tile-track {
+    position: absolute;
+    top: 0; left: 0;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.4s cubic-bezier(.34,1.2,.4,1);
   }
+  .tile {
+    width: 50px; height: 50px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    background: rgba(255,255,255,0.4);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    opacity: 0.55;
+    transition: opacity 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .tile.visited { opacity: 0.8; background: rgba(255,255,255,0.55); }
+  .tile.current {
+    opacity: 1;
+    background: var(--cream-panel);
+    box-shadow: 0 0 0 3px var(--gold), 0 6px 14px rgba(0,0,0,0.18);
+    transform: scale(1.06);
+  }
+  .tile.gate { font-size: 24px; }
 
   /* ---------- Controls ---------- */
   .controls {
     position: absolute;
     bottom: 16px; left: 16px; right: 16px;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
     z-index: 20;
   }
-  .paw-btn {
-    flex: 1;
-    height: 50px;
+  .step-btn {
+    width: 100%;
+    height: 54px;
     border-radius: 18px;
     border: none;
-    background: var(--cream-panel);
-    backdrop-filter: blur(6px);
-    font-size: 20px;
-    color: var(--ink);
-    box-shadow: 0 6px 16px rgba(60,40,20,0.14);
+    background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+    color: #fff;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 8px 18px rgba(201, 127, 46, 0.35);
     cursor: pointer;
+    touch-action: manipulation;
   }
-  .paw-btn:active { transform: translateY(1px) scale(0.97); }
-  .paw-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .step-btn:active { transform: translateY(1px) scale(0.98); }
+  .step-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .step-btn:disabled { opacity: 0.5; cursor: default; }
 
   /* ---------- Overlays ---------- */
   .overlay {
@@ -398,7 +418,86 @@
     box-shadow: 0 20px 50px rgba(0,0,0,0.25);
   }
 
-  .back-link {
+  .book-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.06);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    touch-action: manipulation;
+  }
+  .book-btn:hover { background: rgba(0,0,0,0.1); }
+  .book-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  .book-card { max-width: 360px; }
+
+  .memory-badge {
+    font-size: 12px;
+    color: var(--ink-soft);
+    background: rgba(0,0,0,0.05);
+    border-radius: 999px;
+    display: inline-block;
+    padding: 6px 14px;
+    margin: -8px 0 16px;
+  }
+
+  .memory-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 56vh;
+    overflow-y: auto;
+    text-align: left;
+    -webkit-overflow-scrolling: touch;
+  }
+  .memory-empty {
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 20px 8px;
+    text-align: center;
+  }
+  .memory-card {
+    background: rgba(0,0,0,0.04);
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .memory-sticker { font-size: 20px; line-height: 1.3; flex-shrink: 0; }
+  .memory-body { min-width: 0; flex: 1; }
+  .memory-who {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .memory-date {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+  .memory-line {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin: 3px 0 5px;
+    font-style: italic;
+  }
+  .memory-stats {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .back-link, .book-close-link {
     display: block;
     background: none;
     border: none;
@@ -410,7 +509,7 @@
     padding: 4px 0;
     text-align: left;
   }
-  .back-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .back-link:focus-visible, .book-close-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
   .breed-list {
     display: flex;
@@ -681,13 +780,10 @@
   <div id="stage">
     <div class="ground"></div>
     <div id="sky-decor"></div>
-    <div class="lanes">
-      <button class="lane-zone" data-lane="0" aria-label="Move to left path"></button>
-      <button class="lane-zone" data-lane="1" aria-label="Move to middle path"></button>
-      <button class="lane-zone" data-lane="2" aria-label="Move to right path"></button>
-    </div>
     <div id="pet" aria-hidden="true">🐕</div>
-    <div id="items"></div>
+    <div class="tile-track-wrap" id="tile-track-wrap">
+      <div class="tile-track" id="tile-track"></div>
+    </div>
     <div id="toast-layer"></div>
   </div>
 
@@ -695,7 +791,7 @@
     <div class="hud-pet" id="hud-pet">🐕</div>
     <div class="hud-mid">
       <div class="hud-name" id="hud-name">—</div>
-      <div class="hud-level" id="hud-level">Sunny Meadow</div>
+      <div class="hud-level" id="hud-level">Sunny Beach</div>
       <div class="hud-track"><div class="hud-track-fill" id="hud-fill"></div></div>
     </div>
     <div class="hud-love" id="hud-love">💗 0</div>
@@ -703,14 +799,13 @@
   </div>
 
   <div class="controls">
-    <button class="paw-btn" data-lane="0" aria-label="Move left">🐾 ←</button>
-    <button class="paw-btn" data-lane="1" aria-label="Move to middle">🐾</button>
-    <button class="paw-btn" data-lane="2" aria-label="Move right">→ 🐾</button>
+    <button class="step-btn" id="step-btn">🐾 Take a step</button>
   </div>
 
   <!-- Start screen -->
   <div class="overlay" id="start-screen">
     <div class="card" id="start-card">
+      <button class="book-btn" id="book-btn" aria-label="Open Memory Book">📖</button>
 
       <div class="step-panel" id="step-species">
         <div style="font-size:40px;">🐾</div>
@@ -768,6 +863,7 @@
       <div class="arc-wrap" id="arc-wrap"></div>
       <h1 id="finale-title">Home</h1>
       <p id="finale-text"></p>
+      <p id="finale-memory-badge" class="memory-badge"></p>
       <button class="primary-btn" id="again-btn">Walk the Path Again</button>
       <button class="text-btn" id="new-pet-btn">Start a new journey</button>
     </div>
@@ -782,22 +878,43 @@
       <button class="primary-btn" id="resume-btn">Continue</button>
     </div>
   </div>
+
+  <!-- Memory Book -->
+  <div class="overlay hidden" id="memory-book">
+    <div class="card book-card">
+      <button class="book-close-link" id="book-close">&larr; Back</button>
+      <div style="font-size:28px;">📖</div>
+      <h1 style="font-size:20px;">Memory Book</h1>
+      <p>Every journey leaves something behind.</p>
+      <div class="memory-list" id="memory-list"></div>
+    </div>
+  </div>
 </div>
 
 <script>
 (function () {
   "use strict";
 
+  function standardTiles(hazardEligible) {
+    return ["bone", "bone", "heart", "bone", "memory", "bone", hazardEligible ? "hazard" : "heart", "gate"];
+  }
+
   var LEVELS = [
-    { key: "meadow", name: "Sunny Meadow", emoji: "🌼", target: 10,
-      skyTop: "#FDE9C8", skyBottom: "#F3C88F", ground: "#8FAE72", stars: 0 },
-    { key: "forest", name: "Whispering Forest", emoji: "🌲", target: 14,
-      skyTop: "#CFE3C0", skyBottom: "#8FB07A", ground: "#5D8A54", stars: 0 },
-    { key: "clouds", name: "Cloud Kingdom", emoji: "☁️", target: 18,
-      skyTop: "#EAF3FB", skyBottom: "#BFD8EC", ground: "#9FC1DE", stars: 6 },
-    { key: "stars", name: "Starlit Sky", emoji: "✨", target: 22,
-      skyTop: "#4B4C78", skyBottom: "#241F3B", ground: "#312A52", stars: 22 }
+    { key: "beach", name: "Sunny Beach", emoji: "🏖️",
+      skyTop: "#BFE8E0", skyBottom: "#F4E3B8", ground: "#E8D5A0", stars: 0, tiles: standardTiles(false) },
+    { key: "meadow", name: "Sunny Meadow", emoji: "🌼",
+      skyTop: "#FDE9C8", skyBottom: "#F3C88F", ground: "#8FAE72", stars: 0, tiles: standardTiles(true) },
+    { key: "forest", name: "Whispering Forest", emoji: "🌲",
+      skyTop: "#CFE3C0", skyBottom: "#8FB07A", ground: "#5D8A54", stars: 0, tiles: standardTiles(true) },
+    { key: "mountains", name: "Quiet Mountains", emoji: "⛰️",
+      skyTop: "#D9E6F0", skyBottom: "#A9BDD0", ground: "#7C8A9A", stars: 0, tiles: standardTiles(true) },
+    { key: "clouds", name: "Cloud Kingdom", emoji: "☁️",
+      skyTop: "#EAF3FB", skyBottom: "#BFD8EC", ground: "#9FC1DE", stars: 6, tiles: standardTiles(true) },
+    { key: "stars", name: "Starlit Sky", emoji: "✨",
+      skyTop: "#4B4C78", skyBottom: "#241F3B", ground: "#312A52", stars: 22, tiles: standardTiles(true) }
   ];
+
+  var TILE_ICON = { bone: "🦴", heart: "💗", star: "⭐", memory: "💭", gate: "🚩", mystery: "🐾" };
 
   var ARC_COLORS = ["#E2897A", "#E29A44", "#F0C265", "#8FAE72", "#6B6C9A"];
 
@@ -966,6 +1083,24 @@
     ]
   };
 
+  var MEMORY_PROMPTS = [
+    "The way they'd perk up the moment you picked up the leash.",
+    "Curled up right where the sun hit the floor.",
+    "That one toy they never got tired of.",
+    "The sound of their paws on the floor when they came running.",
+    "How they always knew when you needed them close.",
+    "The specific way they'd sigh and settle in for the night.",
+    "Waiting by the door, right on time, every time.",
+    "The look right before they got the zoomies.",
+    "How every walk became their favorite walk.",
+    "The little groan when you scratched just the right spot.",
+    "The way they'd lean their whole weight against your leg.",
+    "That unmistakable sound of them shaking off after a bath.",
+    "How they'd watch the door for you, no matter how long you were gone.",
+    "The exact spot on the couch that was always theirs."
+  ];
+  var MEMORY_STICKERS = ["🦴", "💗", "⭐", "🌈", "🐾", "✨"];
+
   var glyphURICache = {};
   function glyphURI(kind, breed) {
     var key = kind + (breed ? ":" + breed.name : "");
@@ -998,7 +1133,9 @@
     ground: document.querySelector(".ground"),
     skyDecor: document.getElementById("sky-decor"),
     pet: document.getElementById("pet"),
-    items: document.getElementById("items"),
+    trackWrap: document.getElementById("tile-track-wrap"),
+    track: document.getElementById("tile-track"),
+    stepBtn: document.getElementById("step-btn"),
     toastLayer: document.getElementById("toast-layer"),
     hudPet: document.getElementById("hud-pet"),
     hudName: document.getElementById("hud-name"),
@@ -1021,6 +1158,10 @@
     profileContinueBtn: document.getElementById("profile-continue"),
     namePreview: document.getElementById("name-preview"),
     backLinks: Array.prototype.slice.call(document.querySelectorAll(".back-link")),
+    bookBtn: document.getElementById("book-btn"),
+    bookClose: document.getElementById("book-close"),
+    memoryBook: document.getElementById("memory-book"),
+    memoryList: document.getElementById("memory-list"),
     levelup: document.getElementById("levelup"),
     levelupEmoji: document.getElementById("levelup-emoji"),
     levelupTitle: document.getElementById("levelup-title"),
@@ -1028,38 +1169,31 @@
     finale: document.getElementById("finale"),
     finaleTitle: document.getElementById("finale-title"),
     finaleText: document.getElementById("finale-text"),
+    finaleMemoryBadge: document.getElementById("finale-memory-badge"),
     arcWrap: document.getElementById("arc-wrap"),
     againBtn: document.getElementById("again-btn"),
     newPetBtn: document.getElementById("new-pet-btn"),
     pauseScreen: document.getElementById("pause-screen"),
-    resumeBtn: document.getElementById("resume-btn"),
-    laneZones: Array.prototype.slice.call(document.querySelectorAll(".lane-zone")),
-    pawBtns: Array.prototype.slice.call(document.querySelectorAll(".paw-btn"))
+    resumeBtn: document.getElementById("resume-btn")
   };
-
-  var LANE_X = [16.6, 50, 83.3];
 
   var game = {
     running: false,
     paused: false,
-    lane: 1,
     levelIndex: 0,
-    progress: 0,
+    tileIndex: -1,
+    tiles: [],
     love: 0,
     petKind: "dog",
     breed: null,
     petName: "",
     perk: null,
     hazards: null,
-    laneSpeedMult: 1,
-    catchBonus: 0,
-    starRateBonus: 0,
+    doubleStepChance: 0,
+    hazardDodgeChance: 0,
+    bonusStarChance: 0,
     heartValue: 2,
-    lastSpawn: 0,
-    spawnInterval: 1300,
-    fallSpeed: 78,
-    lastFrame: 0,
-    fallItems: []
+    stepping: false
   };
 
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1076,6 +1210,107 @@
       localStorage.setItem("petJourney.name", name);
     } catch (e) {}
   }
+
+  function speciesLabel(kind) {
+    if (kind === "dog") return "Dog";
+    if (kind === "cat") return "Cat";
+    if (kind === "rabbit") return "Rabbit";
+    if (kind === "bird") return "Bird";
+    return "A Friend";
+  }
+
+  function loadMemories() {
+    try {
+      var raw = localStorage.getItem("petJourney.memories");
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveMemories(arr) {
+    try {
+      localStorage.setItem("petJourney.memories", JSON.stringify(arr.slice(-60)));
+    } catch (e) {}
+  }
+
+  function addMemory() {
+    var memories = loadMemories();
+    var lastPrompt = memories.length ? memories[memories.length - 1].prompt : null;
+    var pool = MEMORY_PROMPTS.filter(function (p) { return p !== lastPrompt; });
+    var prompt = pool[Math.floor(Math.random() * pool.length)];
+    var entry = {
+      date: new Date().toISOString(),
+      petName: game.petName,
+      label: game.breed ? game.breed.name : speciesLabel(game.petKind),
+      kind: game.petKind,
+      prompt: prompt,
+      sticker: MEMORY_STICKERS[Math.floor(Math.random() * MEMORY_STICKERS.length)],
+      bones: game.bonesCollected,
+      love: game.love
+    };
+    memories.push(entry);
+    saveMemories(memories);
+    return entry;
+  }
+
+  function formatMemoryDate(iso) {
+    try {
+      var d = new Date(iso);
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function renderMemoryBook() {
+    var memories = loadMemories().slice().reverse();
+    els.memoryList.innerHTML = "";
+    if (!memories.length) {
+      var empty = document.createElement("div");
+      empty.className = "memory-empty";
+      empty.textContent = "Nothing here yet — complete a journey to add your first memory.";
+      els.memoryList.appendChild(empty);
+      return;
+    }
+    memories.forEach(function (m) {
+      var card = document.createElement("div");
+      card.className = "memory-card";
+      var sticker = document.createElement("div");
+      sticker.className = "memory-sticker";
+      sticker.textContent = m.sticker || "🐾";
+      var body = document.createElement("div");
+      body.className = "memory-body";
+      var who = document.createElement("div");
+      who.className = "memory-who";
+      who.textContent = (m.petName || "A friend") + " · " + m.label + " · ";
+      var dateSpan = document.createElement("span");
+      dateSpan.className = "memory-date";
+      dateSpan.textContent = formatMemoryDate(m.date);
+      who.appendChild(dateSpan);
+      var line = document.createElement("div");
+      line.className = "memory-line";
+      line.textContent = "“" + m.prompt + "”";
+      var stats = document.createElement("div");
+      stats.className = "memory-stats";
+      stats.textContent = "🦴 " + m.bones + "   💗 " + m.love;
+      body.appendChild(who);
+      body.appendChild(line);
+      body.appendChild(stats);
+      card.appendChild(sticker);
+      card.appendChild(body);
+      els.memoryList.appendChild(card);
+    });
+  }
+
+  els.bookBtn.addEventListener("click", function () {
+    renderMemoryBook();
+    show(els.memoryBook);
+  });
+  els.bookClose.addEventListener("click", function () {
+    hide(els.memoryBook);
+  });
 
   var stepStack = [];
   function showStep(id, push) {
@@ -1198,20 +1433,49 @@
   }
 
   function updateHudFill() {
-    var level = LEVELS[game.levelIndex];
-    var pct = Math.min(100, (game.progress / level.target) * 100);
+    var pct = game.tiles.length ? Math.min(100, (game.tileIndex / game.tiles.length) * 100) : 0;
     els.hudFill.style.width = pct + "%";
     els.hudLove.textContent = "💗 " + game.love;
   }
 
-  function setPetLane(lane, animate) {
-    game.lane = lane;
-    els.pet.style.left = LANE_X[lane] + "%";
-    if (animate) {
-      els.pet.classList.remove("step");
-      void els.pet.offsetWidth;
-      els.pet.classList.add("step");
+  function positionTrack(animate) {
+    var wrapW = els.trackWrap.clientWidth || 230;
+    var pitch = 62;
+    var tileCenter = game.tileIndex * pitch + 25;
+    var tx = wrapW / 2 - tileCenter;
+    if (!animate) els.track.style.transition = "none";
+    els.track.style.transform = "translateX(" + tx + "px)";
+    if (!animate) {
+      void els.track.offsetWidth;
+      els.track.style.transition = "";
     }
+  }
+
+  function updateCurrentTileHighlight() {
+    game.tileEls.forEach(function (el, i) {
+      el.classList.toggle("current", i === game.tileIndex);
+    });
+  }
+
+  function buildChapterTiles(index) {
+    var types = LEVELS[index].tiles;
+    game.tiles = types.map(function (type) {
+      if (type === "hazard" && !game.hazards) type = "heart";
+      var tile = { type: type, resolved: false };
+      if (type === "hazard") tile.hazard = game.hazards[Math.floor(Math.random() * game.hazards.length)];
+      return tile;
+    });
+    game.tileIndex = 0;
+    els.track.innerHTML = "";
+    game.tileEls = game.tiles.map(function () {
+      var d = document.createElement("div");
+      d.className = "tile mystery";
+      d.textContent = TILE_ICON.mystery;
+      els.track.appendChild(d);
+      return d;
+    });
+    positionTrack(false);
+    updateCurrentTileHighlight();
   }
 
   function startJourney() {
@@ -1220,36 +1484,32 @@
     saveIdentity(typedName);
     els.hudName.textContent = game.petName;
     game.levelIndex = 0;
-    game.progress = 0;
     game.love = 0;
-    game.fallItems.forEach(function (it) { it.el.remove(); });
-    game.fallItems = [];
+    game.bonesCollected = 0;
     els.toastLayer.innerHTML = "";
 
     game.perk = game.breed ? game.breed.perk : null;
     game.hazards = (game.petKind === "dog" || game.petKind === "cat") ? HAZARDS_BY_SPECIES[game.petKind] : null;
-    game.laneSpeedMult = 1;
-    game.catchBonus = 0;
-    game.starRateBonus = 0;
+    game.doubleStepChance = 0;
+    game.hazardDodgeChance = 0;
+    game.bonusStarChance = 0;
     game.heartValue = 2;
     if (game.perk) {
-      if (game.perk.key === "laneSpeed") game.laneSpeedMult = game.perk.value;
-      else if (game.perk.key === "catchWindow") game.catchBonus = game.perk.value;
-      else if (game.perk.key === "starRate") game.starRateBonus = game.perk.value;
+      if (game.perk.key === "laneSpeed") game.doubleStepChance = Math.min(0.3, (1 - game.perk.value) * 0.5);
+      else if (game.perk.key === "catchWindow") game.hazardDodgeChance = 0.35;
+      else if (game.perk.key === "starRate") game.bonusStarChance = game.perk.value;
       else if (game.perk.key === "heartValue") game.heartValue = game.perk.value;
     }
-    els.pet.style.transitionDuration = (0.22 * game.laneSpeedMult) + "s";
 
-    setPetLane(1, false);
+    buildChapterTiles(0);
     applyLevel(0);
     hide(els.start);
     hide(els.finale);
     hide(els.pauseScreen);
     game.running = true;
     game.paused = false;
-    game.lastSpawn = 0;
-    game.lastFrame = performance.now();
-    requestAnimationFrame(loop);
+    game.stepping = false;
+    els.stepBtn.disabled = false;
     try {
       setGlyph(els.pet, game.petKind, game.breed);
       setGlyph(els.hudPet, game.petKind, game.breed);
@@ -1259,32 +1519,10 @@
   function hide(el) { el.classList.add("hidden"); }
   function show(el) { el.classList.remove("hidden"); }
 
-  function spawnItem() {
-    var lane = Math.floor(Math.random() * 3);
-    var roll = Math.random();
-    var type = "bone";
-    var hazard = null;
-    if (game.hazards && game.levelIndex >= 1 && roll < 0.12) {
-      type = "hazard";
-      hazard = game.hazards[Math.floor(Math.random() * game.hazards.length)];
-    } else if (roll > 0.9 - game.starRateBonus) {
-      type = "star";
-    } else if (roll > 0.68) {
-      type = "heart";
-    }
-    var el = document.createElement("div");
-    el.className = "falling";
-    el.style.left = LANE_X[lane] + "%";
-    el.style.top = "-30px";
-    el.textContent = type === "bone" ? "🦴" : type === "heart" ? "💗" : type === "star" ? "⭐" : hazard.emoji;
-    els.items.appendChild(el);
-    game.fallItems.push({ el: el, lane: lane, y: -30, type: type, hazard: hazard });
-  }
-
-  function showHazardToast(hazard) {
+  function showToast(text) {
     var toast = document.createElement("div");
     toast.className = "hazard-toast";
-    toast.textContent = hazard.emoji + " " + hazard.blurb;
+    toast.textContent = text;
     els.toastLayer.innerHTML = "";
     els.toastLayer.appendChild(toast);
     setTimeout(function () {
@@ -1296,62 +1534,113 @@
     els.pet.classList.remove("flinch");
     void els.pet.offsetWidth;
     els.pet.classList.add("flinch");
-    showHazardToast(hazard);
+    showToast(hazard.emoji + " " + hazard.blurb);
   }
 
-  function burstSparkle(xPercent, y) {
+  function burstSparkle() {
+    var y = els.pet.offsetTop;
     for (var i = 0; i < 4; i++) {
       var sp = document.createElement("div");
       sp.className = "sparkle";
       sp.textContent = "✨";
-      sp.style.left = (xPercent + (Math.random() * 10 - 5)) + "%";
+      sp.style.left = (50 + (Math.random() * 10 - 5)) + "%";
       sp.style.top = y + "px";
-      els.items.appendChild(sp);
+      els.stage.appendChild(sp);
       (function (node) {
         setTimeout(function () { node.remove(); }, 750);
       })(sp);
     }
   }
 
-  function collect(item) {
-    item.el.remove();
-    if (item.type === "hazard") {
-      hazardCaught(item.hazard);
+  function resolveTile(tile, index) {
+    tile.resolved = true;
+    var el = game.tileEls[index];
+    el.classList.remove("mystery");
+    el.classList.add("visited");
+    el.textContent = tile.type === "hazard" ? tile.hazard.emoji : TILE_ICON[tile.type];
+
+    if (tile.type === "bone") {
+      game.bonesCollected++;
+      burstSparkle();
+      if (Math.random() < game.bonusStarChance) {
+        game.love += 3;
+        showToast("⭐ Found a lucky star along the way!");
+      }
+    } else if (tile.type === "heart") {
+      game.love += game.heartValue;
+      burstSparkle();
+    } else if (tile.type === "star") {
+      game.love += 3;
+      burstSparkle();
+    } else if (tile.type === "memory") {
+      showToast("💭 " + MEMORY_PROMPTS[Math.floor(Math.random() * MEMORY_PROMPTS.length)]);
+    } else if (tile.type === "hazard") {
+      if (Math.random() < game.hazardDodgeChance) {
+        showToast("✨ Tiptoed right past it.");
+      } else {
+        hazardCaught(tile.hazard);
+      }
+    } else if (tile.type === "gate") {
+      burstSparkle();
+    }
+    updateHudFill();
+  }
+
+  function maybeDoubleStep() {
+    var next = game.tiles[game.tileIndex];
+    if (game.doubleStepChance > 0 && next && next.type !== "gate" && Math.random() < game.doubleStepChance) {
+      setTimeout(stepForward, 180);
+    }
+  }
+
+  function stepForward() {
+    if (!game.running || game.paused || game.stepping) return;
+    var tile = game.tiles[game.tileIndex];
+    if (!tile) return;
+    game.stepping = true;
+    els.stepBtn.disabled = true;
+    els.pet.classList.remove("step");
+    void els.pet.offsetWidth;
+    els.pet.classList.add("step");
+    resolveTile(tile, game.tileIndex);
+
+    if (tile.type === "gate") {
+      setTimeout(function () {
+        game.stepping = false;
+        advanceLevel();
+      }, 500);
       return;
     }
-    if (item.type === "bone") {
-      game.progress++;
-    } else if (item.type === "heart") {
-      game.love += game.heartValue;
-    } else {
-      game.love += 3;
-    }
-    burstSparkle(LANE_X[item.lane], els.stage.clientHeight - 150);
-    updateHudFill();
-    var level = LEVELS[game.levelIndex];
-    if (item.type === "bone" && game.progress >= level.target) {
-      advanceLevel();
-    }
+
+    setTimeout(function () {
+      game.tileIndex++;
+      updateCurrentTileHighlight();
+      positionTrack(true);
+      game.stepping = false;
+      els.stepBtn.disabled = false;
+      maybeDoubleStep();
+    }, 260);
   }
 
   function advanceLevel() {
     game.levelIndex++;
-    game.progress = 0;
     if (game.levelIndex >= LEVELS.length) {
       showFinale();
       return;
     }
     var level = LEVELS[game.levelIndex];
+    buildChapterTiles(game.levelIndex);
     applyLevel(game.levelIndex);
     els.levelupEmoji.textContent = level.emoji;
     els.levelupTitle.textContent = level.name;
     els.levelupText.textContent = game.petName + " wanders on, a little further along.";
     show(els.levelup);
     game.paused = true;
+    els.stepBtn.disabled = true;
     setTimeout(function () {
       hide(els.levelup);
       game.paused = false;
-      game.lastFrame = performance.now();
+      els.stepBtn.disabled = false;
     }, 1700);
   }
 
@@ -1395,66 +1684,20 @@
   function showFinale() {
     game.running = false;
     buildArc();
-    var totalBones = LEVELS.reduce(function (s, l) { return s + l.target; }, 0);
     els.finaleTitle.textContent = "Welcome home, " + game.petName + ".";
-    els.finaleText.textContent = "Warm light, wagging tails, and old friends came out to meet " + game.petName + " at the gate — nobody arrives alone. Every one of the " + totalBones + " bones gathered was really just a little piece of the love you gave, carried all the way there, plus " + game.love + " small moments of love besides.";
+    els.finaleText.textContent = "Warm light, wagging tails, and old friends came out to meet " + game.petName + " at the gate — nobody arrives alone. Every one of the " + game.bonesCollected + " bones gathered was really just a little piece of the love you gave, carried all the way there, plus " + game.love + " small moments of love besides.";
+    addMemory();
+    els.finaleMemoryBadge.textContent = "📖 Added to your Memory Book";
     show(els.finale);
   }
 
-  function loop(now) {
-    if (!game.running) return;
-    var dt = now - game.lastFrame;
-    els.hudLevel.textContent = LEVELS[game.levelIndex] ? LEVELS[game.levelIndex].name : els.hudLevel.textContent;
-
-    if (!game.paused) {
-      game.lastFrame = now;
-      game.lastSpawn += dt;
-      if (game.lastSpawn > game.spawnInterval) {
-        game.lastSpawn = 0;
-        spawnItem();
-      }
-      var stageH = els.stage.clientHeight;
-      var catchY = stageH - 128;
-      for (var i = game.fallItems.length - 1; i >= 0; i--) {
-        var item = game.fallItems[i];
-        item.y += (game.fallSpeed * dt) / 1000;
-        item.el.style.top = item.y + "px";
-        if (item.y > catchY - 26 - game.catchBonus && item.y < catchY + 30 + game.catchBonus && item.lane === game.lane) {
-          game.fallItems.splice(i, 1);
-          collect(item);
-          continue;
-        }
-        if (item.y > stageH + 20) {
-          item.el.remove();
-          game.fallItems.splice(i, 1);
-        }
-      }
-    } else {
-      game.lastFrame = now;
-    }
-    requestAnimationFrame(loop);
-  }
-
-  function moveLane(lane) {
-    if (!game.running || game.paused) return;
-    if (lane === game.lane) return;
-    setPetLane(lane, true);
-  }
-
-  els.laneZones.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      moveLane(parseInt(btn.getAttribute("data-lane"), 10));
-    });
-  });
-  els.pawBtns.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      moveLane(parseInt(btn.getAttribute("data-lane"), 10));
-    });
-  });
+  els.stepBtn.addEventListener("click", stepForward);
   document.addEventListener("keydown", function (e) {
-    if (!game.running) return;
-    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveLane(Math.max(0, game.lane - 1));
-    else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveLane(Math.min(2, game.lane + 1));
+    if (!game.running || game.paused) return;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      stepForward();
+    }
   });
 
   els.beginBtn.addEventListener("click", startJourney);
@@ -1465,12 +1708,13 @@
   els.pauseBtn.addEventListener("click", function () {
     if (!game.running) return;
     game.paused = true;
+    els.stepBtn.disabled = true;
     show(els.pauseScreen);
   });
   els.resumeBtn.addEventListener("click", function () {
     hide(els.pauseScreen);
     game.paused = false;
-    game.lastFrame = performance.now();
+    els.stepBtn.disabled = false;
   });
 
   els.againBtn.addEventListener("click", function () {
@@ -1480,6 +1724,7 @@
   els.newPetBtn.addEventListener("click", function () {
     hide(els.finale);
     game.running = false;
+    els.toastLayer.innerHTML = "";
     stepStack = [];
     showStep("step-species", false);
     show(els.start);
