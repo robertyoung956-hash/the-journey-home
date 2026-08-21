@@ -163,78 +163,6 @@
     .star { animation: none; opacity: 0.7; }
   }
 
-  /* ---------- Chapter landmarks ---------- */
-  .landmark { position: absolute; opacity: 0.8; }
-
-  .landmark-sun {
-    width: 58px; height: 58px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #FFF8E2, #FFDE9E 62%, rgba(255,222,158,0) 100%);
-    box-shadow: 0 0 28px 6px rgba(255, 222, 158, 0.45);
-  }
-
-  .landmark-palm .trunk {
-    position: absolute;
-    bottom: 0; left: 27px;
-    width: 7px; height: 66px;
-    background: linear-gradient(180deg, #A9793E, #8A5F2E);
-    border-radius: 4px;
-    transform: rotate(5deg);
-    transform-origin: bottom center;
-  }
-  .landmark-palm .frond {
-    position: absolute;
-    top: 4px; left: 30px;
-    width: 42px; height: 15px;
-    background: #6E9A4E;
-    border-radius: 50% 50% 50% 4px;
-    transform-origin: 4px 7px;
-  }
-
-  .landmark-peak {
-    position: absolute;
-    bottom: 0;
-    width: 0; height: 0;
-    border-left: 52px solid transparent;
-    border-right: 52px solid transparent;
-    border-bottom-style: solid;
-  }
-
-  .landmark-tree .tier {
-    position: absolute;
-    left: 50%;
-    width: 0; height: 0;
-    border-left: 19px solid transparent;
-    border-right: 19px solid transparent;
-    border-bottom: 26px solid #4F7A46;
-    transform: translateX(-50%);
-  }
-  .landmark-tree .trunk {
-    position: absolute;
-    bottom: -10px; left: 50%;
-    width: 6px; height: 12px;
-    background: #7A5A3A;
-    transform: translateX(-50%);
-    border-radius: 2px;
-  }
-
-  .landmark-bloom {
-    position: absolute;
-    bottom: 0;
-    width: 2px; height: 22px;
-    background: #6E9A4E;
-    border-radius: 2px;
-  }
-  .landmark-bloom::before {
-    content: "";
-    position: absolute;
-    top: -5px; left: 50%;
-    width: 11px; height: 11px;
-    border-radius: 50%;
-    background: var(--bloom-color, #E2897A);
-    transform: translateX(-50%);
-  }
-
   /* ---------- HUD ---------- */
   .hud {
     position: absolute;
@@ -310,40 +238,36 @@
   /* ---------- Pet & items ---------- */
   #pet {
     position: absolute;
-    transform: translate(-50%, -94%);
-    transition: left 0.45s cubic-bezier(.34,1.2,.4,1), top 0.45s cubic-bezier(.34,1.2,.4,1);
+    bottom: 15%;
+    font-size: 46px;
+    line-height: 1;
+    transform: translate(-50%, 0);
+    transition: left 0.22s cubic-bezier(.34,1.56,.64,1);
+    animation: idle-bounce 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 6px 6px rgba(0,0,0,0.18));
     z-index: 10;
     user-select: none;
-    pointer-events: none;
-  }
-  #pet-glyph {
-    display: block;
-    font-size: 44px;
-    line-height: 1;
-    filter: drop-shadow(0 6px 6px rgba(0,0,0,0.18));
-    animation: idle-bounce 1.8s ease-in-out infinite;
   }
   @keyframes idle-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -8px); }
   }
-  #pet-glyph.step { animation: step-pulse 0.4s ease; }
+  #pet.step { animation: step-pulse 0.22s ease; }
   @keyframes step-pulse {
-    0% { transform: translateY(0) scale(1); }
-    40% { transform: translateY(-20px) scale(1.1); }
-    100% { transform: translateY(0) scale(1); }
+    0% { transform: translate(-50%, 0) scale(1); }
+    50% { transform: translate(-50%, -4px) scale(1.12); }
+    100% { transform: translate(-50%, 0) scale(1); }
   }
-  #pet-glyph.flinch { animation: flinch-wobble 0.4s ease; }
+  #pet.flinch { animation: flinch-wobble 0.4s ease; }
   @keyframes flinch-wobble {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-8deg); }
-    55% { transform: rotate(6deg); }
-    80% { transform: rotate(-3deg); }
-    100% { transform: rotate(0deg); }
+    0% { transform: translate(-50%, 0) rotate(0deg); }
+    25% { transform: translate(-50%, 0) rotate(-8deg); }
+    55% { transform: translate(-50%, 0) rotate(6deg); }
+    80% { transform: translate(-50%, 0) rotate(-3deg); }
+    100% { transform: translate(-50%, 0) rotate(0deg); }
   }
   @media (prefers-reduced-motion: reduce) {
-    #pet-glyph { animation: none; }
-    #pet { transition: none; }
+    #pet { animation: none; }
   }
 
   #toast-layer {
@@ -387,6 +311,15 @@
     vertical-align: middle;
   }
 
+  .falling {
+    position: absolute;
+    font-size: 26px;
+    transform: translate(-50%, 0);
+    z-index: 8;
+    pointer-events: none;
+    user-select: none;
+  }
+
   .sparkle {
     position: absolute;
     font-size: 14px;
@@ -399,102 +332,44 @@
     100% { transform: translate(-50%, -46px) scale(1.1); opacity: 0; }
   }
 
-  /* ---------- Winding trail ---------- */
-  .trail-wrap {
-    position: absolute;
-    left: 20px; right: 20px;
-    top: 92px; bottom: 82px;
-    z-index: 6;
-  }
-  .trail-line {
+  /* ---------- Lane input zones ---------- */
+  .lanes {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-  .trail-line .path-bg {
-    fill: none;
-    stroke: rgba(255,255,255,0.5);
-    stroke-width: 6.5;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-    filter: drop-shadow(0 2px 1px rgba(0,0,0,0.08));
-  }
-  .trail-line .path-fg {
-    fill: none;
-    stroke: rgba(255,255,255,0.9);
-    stroke-width: 2;
-    stroke-dasharray: 1 5.5;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-  }
-  :root[data-theme="dark"] .trail-line .path-bg { stroke: rgba(255,255,255,0.14); }
-  :root[data-theme="dark"] .trail-line .path-fg { stroke: rgba(255,255,255,0.34); }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .trail-line .path-bg { stroke: rgba(255,255,255,0.14); }
-    :root:not([data-theme="light"]) .trail-line .path-fg { stroke: rgba(255,255,255,0.34); }
-  }
-
-  .tile {
-    position: absolute;
-    width: 46px; height: 46px;
-    transform: translate(-50%, -50%);
-    border-radius: 40%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    background:
-      radial-gradient(circle at 34% 28%, rgba(255,255,255,0.95), rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.3) 100%);
-    box-shadow:
-      inset 0 2px 0 rgba(255,255,255,0.85),
-      inset 0 -3px 5px rgba(0,0,0,0.13),
-      0 4px 7px rgba(0,0,0,0.16);
-    opacity: 0.62;
-    transition: opacity 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    z-index: 6;
   }
-  .tile.visited {
-    opacity: 0.88;
-    background: radial-gradient(circle at 34% 28%, rgba(255,255,255,0.75), rgba(255,255,255,0.45) 55%);
-    box-shadow:
-      inset 0 2px 4px rgba(0,0,0,0.14),
-      0 1px 2px rgba(0,0,0,0.08);
+  .lane-zone {
+    flex: 1;
+    height: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
   }
-  .tile.current {
-    opacity: 1;
-    box-shadow:
-      inset 0 2px 0 rgba(255,255,255,0.95),
-      inset 0 -3px 5px rgba(0,0,0,0.1),
-      0 0 0 3px var(--gold),
-      0 8px 16px rgba(0,0,0,0.22);
-    transform: translate(-50%, -50%) translateY(-3px) scale(1.14);
-  }
-  .tile.gate { font-size: 22px; width: 52px; height: 52px; }
 
   /* ---------- Controls ---------- */
   .controls {
     position: absolute;
     bottom: 16px; left: 16px; right: 16px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
     z-index: 20;
   }
-  .step-btn {
-    width: 100%;
-    height: 54px;
+  .paw-btn {
+    flex: 1;
+    height: 50px;
     border-radius: 18px;
     border: none;
-    background: linear-gradient(135deg, var(--gold), var(--gold-deep));
-    color: #fff;
-    font-family: var(--font-ui);
-    font-weight: 700;
-    font-size: 15px;
-    box-shadow: 0 8px 18px rgba(201, 127, 46, 0.35);
+    background: var(--cream-panel);
+    backdrop-filter: blur(6px);
+    font-size: 20px;
+    color: var(--ink);
+    box-shadow: 0 6px 16px rgba(60,40,20,0.14);
     cursor: pointer;
-    touch-action: manipulation;
   }
-  .step-btn:active { transform: translateY(1px) scale(0.98); }
-  .step-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
-  .step-btn:disabled { opacity: 0.5; cursor: default; }
+  .paw-btn:active { transform: translateY(1px) scale(0.97); }
+  .paw-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
   /* ---------- Overlays ---------- */
   .overlay {
@@ -523,86 +398,7 @@
     box-shadow: 0 20px 50px rgba(0,0,0,0.25);
   }
 
-  .book-btn {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(0,0,0,0.06);
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    touch-action: manipulation;
-  }
-  .book-btn:hover { background: rgba(0,0,0,0.1); }
-  .book-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
-
-  .book-card { max-width: 360px; }
-
-  .memory-badge {
-    font-size: 12px;
-    color: var(--ink-soft);
-    background: rgba(0,0,0,0.05);
-    border-radius: 999px;
-    display: inline-block;
-    padding: 6px 14px;
-    margin: -8px 0 16px;
-  }
-
-  .memory-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 56vh;
-    overflow-y: auto;
-    text-align: left;
-    -webkit-overflow-scrolling: touch;
-  }
-  .memory-empty {
-    font-size: 13px;
-    color: var(--ink-soft);
-    padding: 20px 8px;
-    text-align: center;
-  }
-  .memory-card {
-    background: rgba(0,0,0,0.04);
-    border-radius: 16px;
-    padding: 12px 14px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-  }
-  .memory-sticker { font-size: 20px; line-height: 1.3; flex-shrink: 0; }
-  .memory-body { min-width: 0; flex: 1; }
-  .memory-who {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .memory-date {
-    font-size: 11px;
-    color: var(--ink-soft);
-    font-weight: 400;
-  }
-  .memory-line {
-    font-size: 13px;
-    line-height: 1.45;
-    color: var(--ink-soft);
-    margin: 3px 0 5px;
-    font-style: italic;
-  }
-  .memory-stats {
-    font-size: 11px;
-    color: var(--ink-soft);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .back-link, .book-close-link {
+  .back-link {
     display: block;
     background: none;
     border: none;
@@ -614,7 +410,7 @@
     padding: 4px 0;
     text-align: left;
   }
-  .back-link:focus-visible, .book-close-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .back-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
   .breed-list {
     display: flex;
@@ -780,38 +576,6 @@
   }
   .name-input::placeholder { color: var(--ink-soft); opacity: 0.7; }
 
-  .memory-label {
-    display: block;
-    text-align: left;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--ink);
-    margin: -6px 0 6px;
-  }
-  .memory-label span {
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-  .memory-input {
-    width: 100%;
-    font-family: var(--font-ui);
-    font-size: 13.5px;
-    line-height: 1.5;
-    padding: 10px 12px;
-    border-radius: 14px;
-    border: 1.5px solid rgba(0,0,0,0.12);
-    background: rgba(0,0,0,0.03);
-    color: var(--ink);
-    margin-bottom: 16px;
-    resize: vertical;
-    touch-action: manipulation;
-  }
-  .memory-input:focus-visible, .memory-input:focus {
-    outline: 2px solid var(--focus-ring);
-    outline-offset: 1px;
-  }
-  .memory-input::placeholder { color: var(--ink-soft); opacity: 0.55; }
-
   .primary-btn {
     width: 100%;
     font-family: var(--font-ui);
@@ -908,7 +672,7 @@
   .pause-overlay .card { padding: 24px; }
 
   @media (max-height: 700px) {
-    #pet-glyph { font-size: 38px; }
+    #pet { font-size: 38px; }
     .card { padding: 20px 20px; }
   }
 </style>
@@ -917,13 +681,13 @@
   <div id="stage">
     <div class="ground"></div>
     <div id="sky-decor"></div>
-    <div class="trail-wrap" id="trail-wrap">
-      <svg class="trail-line" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path id="trail-path-bg" class="path-bg" d=""/>
-        <path id="trail-path" class="path-fg" d=""/>
-      </svg>
-      <div id="pet" aria-hidden="true"><span id="pet-glyph">🐕</span></div>
+    <div class="lanes">
+      <button class="lane-zone" data-lane="0" aria-label="Move to left path"></button>
+      <button class="lane-zone" data-lane="1" aria-label="Move to middle path"></button>
+      <button class="lane-zone" data-lane="2" aria-label="Move to right path"></button>
     </div>
+    <div id="pet" aria-hidden="true">🐕</div>
+    <div id="items"></div>
     <div id="toast-layer"></div>
   </div>
 
@@ -931,7 +695,7 @@
     <div class="hud-pet" id="hud-pet">🐕</div>
     <div class="hud-mid">
       <div class="hud-name" id="hud-name">—</div>
-      <div class="hud-level" id="hud-level">Sunny Beach</div>
+      <div class="hud-level" id="hud-level">Sunny Meadow</div>
       <div class="hud-track"><div class="hud-track-fill" id="hud-fill"></div></div>
     </div>
     <div class="hud-love" id="hud-love">💗 0</div>
@@ -939,13 +703,14 @@
   </div>
 
   <div class="controls">
-    <button class="step-btn" id="step-btn">🐾 Take a step</button>
+    <button class="paw-btn" data-lane="0" aria-label="Move left">🐾 ←</button>
+    <button class="paw-btn" data-lane="1" aria-label="Move to middle">🐾</button>
+    <button class="paw-btn" data-lane="2" aria-label="Move right">→ 🐾</button>
   </div>
 
   <!-- Start screen -->
   <div class="overlay" id="start-screen">
     <div class="card" id="start-card">
-      <button class="book-btn" id="book-btn" aria-label="Open Memory Book">📖</button>
 
       <div class="step-panel" id="step-species">
         <div style="font-size:40px;">🐾</div>
@@ -982,8 +747,6 @@
         <div class="name-preview" id="name-preview"></div>
         <h1 style="font-size:22px;">What's their name?</h1>
         <input class="name-input" id="name-input" type="text" maxlength="18" placeholder="Their name" aria-label="Your companion's name" />
-        <label class="memory-label" for="memory-input">Add a memory or two <span>(optional, one per line)</span></label>
-        <textarea class="memory-input" id="memory-input" rows="3" placeholder="Their favorite spot in the sun&#10;The way they'd greet you at the door&#10;That one toy they loved"></textarea>
         <button class="primary-btn" id="begin-btn">Begin the Journey</button>
       </div>
 
@@ -1005,7 +768,6 @@
       <div class="arc-wrap" id="arc-wrap"></div>
       <h1 id="finale-title">Home</h1>
       <p id="finale-text"></p>
-      <p id="finale-memory-badge" class="memory-badge"></p>
       <button class="primary-btn" id="again-btn">Walk the Path Again</button>
       <button class="text-btn" id="new-pet-btn">Start a new journey</button>
     </div>
@@ -1020,43 +782,22 @@
       <button class="primary-btn" id="resume-btn">Continue</button>
     </div>
   </div>
-
-  <!-- Memory Book -->
-  <div class="overlay hidden" id="memory-book">
-    <div class="card book-card">
-      <button class="book-close-link" id="book-close">&larr; Back</button>
-      <div style="font-size:28px;">📖</div>
-      <h1 style="font-size:20px;">Memory Book</h1>
-      <p>Every journey leaves something behind.</p>
-      <div class="memory-list" id="memory-list"></div>
-    </div>
-  </div>
 </div>
 
 <script>
 (function () {
   "use strict";
 
-  function standardTiles(hazardEligible) {
-    return ["bone", "bone", "heart", "bone", "memory", "bone", hazardEligible ? "hazard" : "heart", "gate"];
-  }
-
   var LEVELS = [
-    { key: "beach", name: "Sunny Beach", emoji: "🏖️",
-      skyTop: "#BFE8E0", skyBottom: "#F4E3B8", ground: "#E8D5A0", stars: 0, tiles: standardTiles(false) },
-    { key: "meadow", name: "Sunny Meadow", emoji: "🌼",
-      skyTop: "#FDE9C8", skyBottom: "#F3C88F", ground: "#8FAE72", stars: 0, tiles: standardTiles(true) },
-    { key: "forest", name: "Whispering Forest", emoji: "🌲",
-      skyTop: "#CFE3C0", skyBottom: "#8FB07A", ground: "#5D8A54", stars: 0, tiles: standardTiles(true) },
-    { key: "mountains", name: "Quiet Mountains", emoji: "⛰️",
-      skyTop: "#D9E6F0", skyBottom: "#A9BDD0", ground: "#7C8A9A", stars: 0, tiles: standardTiles(true) },
-    { key: "clouds", name: "Cloud Kingdom", emoji: "☁️",
-      skyTop: "#EAF3FB", skyBottom: "#BFD8EC", ground: "#9FC1DE", stars: 6, tiles: standardTiles(true) },
-    { key: "stars", name: "Starlit Sky", emoji: "✨",
-      skyTop: "#4B4C78", skyBottom: "#241F3B", ground: "#312A52", stars: 22, tiles: standardTiles(true) }
+    { key: "meadow", name: "Sunny Meadow", emoji: "🌼", target: 10,
+      skyTop: "#FDE9C8", skyBottom: "#F3C88F", ground: "#8FAE72", stars: 0 },
+    { key: "forest", name: "Whispering Forest", emoji: "🌲", target: 14,
+      skyTop: "#CFE3C0", skyBottom: "#8FB07A", ground: "#5D8A54", stars: 0 },
+    { key: "clouds", name: "Cloud Kingdom", emoji: "☁️", target: 18,
+      skyTop: "#EAF3FB", skyBottom: "#BFD8EC", ground: "#9FC1DE", stars: 6 },
+    { key: "stars", name: "Starlit Sky", emoji: "✨", target: 22,
+      skyTop: "#4B4C78", skyBottom: "#241F3B", ground: "#312A52", stars: 22 }
   ];
-
-  var TILE_ICON = { bone: "🦴", heart: "💗", star: "⭐", memory: "💭", gate: "🚩", mystery: "🐾" };
 
   var ARC_COLORS = ["#E2897A", "#E29A44", "#F0C265", "#8FAE72", "#6B6C9A"];
 
@@ -1225,24 +966,6 @@
     ]
   };
 
-  var MEMORY_PROMPTS = [
-    "The way they'd perk up the moment you picked up the leash.",
-    "Curled up right where the sun hit the floor.",
-    "That one toy they never got tired of.",
-    "The sound of their paws on the floor when they came running.",
-    "How they always knew when you needed them close.",
-    "The specific way they'd sigh and settle in for the night.",
-    "Waiting by the door, right on time, every time.",
-    "The look right before they got the zoomies.",
-    "How every walk became their favorite walk.",
-    "The little groan when you scratched just the right spot.",
-    "The way they'd lean their whole weight against your leg.",
-    "That unmistakable sound of them shaking off after a bath.",
-    "How they'd watch the door for you, no matter how long you were gone.",
-    "The exact spot on the couch that was always theirs."
-  ];
-  var MEMORY_STICKERS = ["🦴", "💗", "⭐", "🌈", "🐾", "✨"];
-
   var glyphURICache = {};
   function glyphURI(kind, breed) {
     var key = kind + (breed ? ":" + breed.name : "");
@@ -1275,11 +998,7 @@
     ground: document.querySelector(".ground"),
     skyDecor: document.getElementById("sky-decor"),
     pet: document.getElementById("pet"),
-    petGlyph: document.getElementById("pet-glyph"),
-    trailWrap: document.getElementById("trail-wrap"),
-    trailPath: document.getElementById("trail-path"),
-    trailPathBg: document.getElementById("trail-path-bg"),
-    stepBtn: document.getElementById("step-btn"),
+    items: document.getElementById("items"),
     toastLayer: document.getElementById("toast-layer"),
     hudPet: document.getElementById("hud-pet"),
     hudName: document.getElementById("hud-name"),
@@ -1289,7 +1008,6 @@
     pauseBtn: document.getElementById("pause-btn"),
     start: document.getElementById("start-screen"),
     nameInput: document.getElementById("name-input"),
-    memoryInput: document.getElementById("memory-input"),
     beginBtn: document.getElementById("begin-btn"),
     petOpts: Array.prototype.slice.call(document.querySelectorAll(".pet-opt")),
     startCard: document.getElementById("start-card"),
@@ -1303,10 +1021,6 @@
     profileContinueBtn: document.getElementById("profile-continue"),
     namePreview: document.getElementById("name-preview"),
     backLinks: Array.prototype.slice.call(document.querySelectorAll(".back-link")),
-    bookBtn: document.getElementById("book-btn"),
-    bookClose: document.getElementById("book-close"),
-    memoryBook: document.getElementById("memory-book"),
-    memoryList: document.getElementById("memory-list"),
     levelup: document.getElementById("levelup"),
     levelupEmoji: document.getElementById("levelup-emoji"),
     levelupTitle: document.getElementById("levelup-title"),
@@ -1314,32 +1028,38 @@
     finale: document.getElementById("finale"),
     finaleTitle: document.getElementById("finale-title"),
     finaleText: document.getElementById("finale-text"),
-    finaleMemoryBadge: document.getElementById("finale-memory-badge"),
     arcWrap: document.getElementById("arc-wrap"),
     againBtn: document.getElementById("again-btn"),
     newPetBtn: document.getElementById("new-pet-btn"),
     pauseScreen: document.getElementById("pause-screen"),
-    resumeBtn: document.getElementById("resume-btn")
+    resumeBtn: document.getElementById("resume-btn"),
+    laneZones: Array.prototype.slice.call(document.querySelectorAll(".lane-zone")),
+    pawBtns: Array.prototype.slice.call(document.querySelectorAll(".paw-btn"))
   };
+
+  var LANE_X = [16.6, 50, 83.3];
 
   var game = {
     running: false,
     paused: false,
+    lane: 1,
     levelIndex: 0,
-    tileIndex: -1,
-    tiles: [],
+    progress: 0,
     love: 0,
     petKind: "dog",
     breed: null,
     petName: "",
-    personalPrompts: [],
     perk: null,
     hazards: null,
-    doubleStepChance: 0,
-    hazardDodgeChance: 0,
-    bonusStarChance: 0,
+    laneSpeedMult: 1,
+    catchBonus: 0,
+    starRateBonus: 0,
     heartValue: 2,
-    stepping: false
+    lastSpawn: 0,
+    spawnInterval: 1300,
+    fallSpeed: 78,
+    lastFrame: 0,
+    fallItems: []
   };
 
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1348,124 +1068,14 @@
     try {
       var name = localStorage.getItem("petJourney.name");
       if (name) els.nameInput.value = name;
-      var memories = localStorage.getItem("petJourney.personalMemories");
-      if (memories) els.memoryInput.value = memories;
     } catch (e) {}
   }
 
-  function saveIdentity(name, memoriesText) {
+  function saveIdentity(name) {
     try {
       localStorage.setItem("petJourney.name", name);
-      localStorage.setItem("petJourney.personalMemories", memoriesText);
     } catch (e) {}
   }
-
-  function pickMemoryPrompt(excludePrompt) {
-    var pool = (game.personalPrompts && game.personalPrompts.length) ? game.personalPrompts.concat(MEMORY_PROMPTS) : MEMORY_PROMPTS;
-    var filtered = excludePrompt ? pool.filter(function (p) { return p !== excludePrompt; }) : pool;
-    if (!filtered.length) filtered = pool;
-    return filtered[Math.floor(Math.random() * filtered.length)];
-  }
-
-  function speciesLabel(kind) {
-    if (kind === "dog") return "Dog";
-    if (kind === "cat") return "Cat";
-    if (kind === "rabbit") return "Rabbit";
-    if (kind === "bird") return "Bird";
-    return "A Friend";
-  }
-
-  function loadMemories() {
-    try {
-      var raw = localStorage.getItem("petJourney.memories");
-      var arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveMemories(arr) {
-    try {
-      localStorage.setItem("petJourney.memories", JSON.stringify(arr.slice(-60)));
-    } catch (e) {}
-  }
-
-  function addMemory() {
-    var memories = loadMemories();
-    var lastPrompt = memories.length ? memories[memories.length - 1].prompt : null;
-    var prompt = pickMemoryPrompt(lastPrompt);
-    var entry = {
-      date: new Date().toISOString(),
-      petName: game.petName,
-      label: game.breed ? game.breed.name : speciesLabel(game.petKind),
-      kind: game.petKind,
-      prompt: prompt,
-      sticker: MEMORY_STICKERS[Math.floor(Math.random() * MEMORY_STICKERS.length)],
-      bones: game.bonesCollected,
-      love: game.love
-    };
-    memories.push(entry);
-    saveMemories(memories);
-    return entry;
-  }
-
-  function formatMemoryDate(iso) {
-    try {
-      var d = new Date(iso);
-      return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-    } catch (e) {
-      return "";
-    }
-  }
-
-  function renderMemoryBook() {
-    var memories = loadMemories().slice().reverse();
-    els.memoryList.innerHTML = "";
-    if (!memories.length) {
-      var empty = document.createElement("div");
-      empty.className = "memory-empty";
-      empty.textContent = "Nothing here yet — complete a journey to add your first memory.";
-      els.memoryList.appendChild(empty);
-      return;
-    }
-    memories.forEach(function (m) {
-      var card = document.createElement("div");
-      card.className = "memory-card";
-      var sticker = document.createElement("div");
-      sticker.className = "memory-sticker";
-      sticker.textContent = m.sticker || "🐾";
-      var body = document.createElement("div");
-      body.className = "memory-body";
-      var who = document.createElement("div");
-      who.className = "memory-who";
-      who.textContent = (m.petName || "A friend") + " · " + m.label + " · ";
-      var dateSpan = document.createElement("span");
-      dateSpan.className = "memory-date";
-      dateSpan.textContent = formatMemoryDate(m.date);
-      who.appendChild(dateSpan);
-      var line = document.createElement("div");
-      line.className = "memory-line";
-      line.textContent = "“" + m.prompt + "”";
-      var stats = document.createElement("div");
-      stats.className = "memory-stats";
-      stats.textContent = "🦴 " + m.bones + "   💗 " + m.love;
-      body.appendChild(who);
-      body.appendChild(line);
-      body.appendChild(stats);
-      card.appendChild(sticker);
-      card.appendChild(body);
-      els.memoryList.appendChild(card);
-    });
-  }
-
-  els.bookBtn.addEventListener("click", function () {
-    renderMemoryBook();
-    show(els.memoryBook);
-  });
-  els.bookClose.addEventListener("click", function () {
-    hide(els.memoryBook);
-  });
 
   var stepStack = [];
   function showStep(id, push) {
@@ -1575,79 +1185,6 @@
         els.skyDecor.appendChild(star);
       }
     }
-    buildLandmarks(level);
-  }
-
-  function buildLandmarks(level) {
-    if (level.key === "beach") {
-      var sun = document.createElement("div");
-      sun.className = "landmark landmark-sun";
-      sun.style.top = "13%";
-      sun.style.right = "8%";
-      els.skyDecor.appendChild(sun);
-
-      var palm = document.createElement("div");
-      palm.className = "landmark landmark-palm";
-      palm.style.left = "5%";
-      palm.style.bottom = "15%";
-      palm.style.width = "70px";
-      palm.style.height = "76px";
-      var trunk = document.createElement("div");
-      trunk.className = "trunk";
-      palm.appendChild(trunk);
-      [-45, -10, 25, 55].forEach(function (deg, i) {
-        var f = document.createElement("div");
-        f.className = "frond";
-        f.style.transform = "rotate(" + deg + "deg)";
-        f.style.opacity = String(0.85 + (i % 2) * 0.1);
-        palm.appendChild(f);
-      });
-      els.skyDecor.appendChild(palm);
-    } else if (level.key === "mountains") {
-      [
-        { left: "2%", height: 70, color: "#B7C3D0", op: 0.55 },
-        { left: "34%", height: 92, color: "#97A5B5", op: 0.75 },
-        { left: "64%", height: 76, color: "#7C8A9A", op: 0.85 }
-      ].forEach(function (p) {
-        var el = document.createElement("div");
-        el.className = "landmark landmark-peak";
-        el.style.left = p.left;
-        el.style.bottom = "13%";
-        el.style.borderBottomWidth = p.height + "px";
-        el.style.borderBottomColor = p.color;
-        el.style.opacity = String(p.op);
-        els.skyDecor.appendChild(el);
-      });
-    } else if (level.key === "forest") {
-      [{ left: "8%", scale: 1.15 }, { left: "78%", scale: 0.95 }].forEach(function (t) {
-        var tree = document.createElement("div");
-        tree.className = "landmark landmark-tree";
-        tree.style.left = t.left;
-        tree.style.bottom = "16%";
-        tree.style.transform = "scale(" + t.scale + ")";
-        [0, 1, 2].forEach(function (tier) {
-          var d = document.createElement("div");
-          d.className = "tier";
-          d.style.bottom = (tier * 15) + "px";
-          d.style.transform = "translateX(-50%) scale(" + (1 - tier * 0.18) + ")";
-          tree.appendChild(d);
-        });
-        var tr = document.createElement("div");
-        tr.className = "trunk";
-        tree.appendChild(tr);
-        els.skyDecor.appendChild(tree);
-      });
-    } else if (level.key === "meadow") {
-      var colors = ["#E2897A", "#E29A44", "#F0C265"];
-      [{ left: "8%" }, { left: "20%" }, { left: "82%" }, { left: "70%" }].forEach(function (f, i) {
-        var bloom = document.createElement("div");
-        bloom.className = "landmark landmark-bloom";
-        bloom.style.left = f.left;
-        bloom.style.bottom = "13%";
-        bloom.style.setProperty("--bloom-color", colors[i % colors.length]);
-        els.skyDecor.appendChild(bloom);
-      });
-    }
   }
 
   function applyLevel(index) {
@@ -1661,100 +1198,60 @@
   }
 
   function updateHudFill() {
-    var pct = game.tiles.length ? Math.min(100, (game.tileIndex / game.tiles.length) * 100) : 0;
+    var level = LEVELS[game.levelIndex];
+    var pct = Math.min(100, (game.progress / level.target) * 100);
     els.hudFill.style.width = pct + "%";
     els.hudLove.textContent = "💗 " + game.love;
   }
 
-  function tilePosition(i, total) {
-    var cols = 3;
-    var rows = Math.ceil(total / cols);
-    var row = Math.floor(i / cols);
-    var itemsInRow = Math.min(cols, total - row * cols);
-    var col = i % cols;
-    if (row % 2 === 1) col = itemsInRow - 1 - col;
-    var x = itemsInRow === 1 ? 50 : 15 + (col / (itemsInRow - 1)) * 70;
-    var y = rows === 1 ? 50 : 8 + (row / (rows - 1)) * 82;
-    return { x: x, y: y };
-  }
-
-  function positionPet() {
-    var pos = tilePosition(Math.max(0, game.tileIndex), game.tiles.length);
-    els.pet.style.left = pos.x + "%";
-    els.pet.style.top = pos.y + "%";
-  }
-
-  function updateCurrentTileHighlight() {
-    game.tileEls.forEach(function (el, i) {
-      el.classList.toggle("current", i === game.tileIndex);
-    });
-  }
-
-  function buildChapterTiles(index) {
-    var types = LEVELS[index].tiles;
-    game.tiles = types.map(function (type) {
-      if (type === "hazard" && !game.hazards) type = "heart";
-      var tile = { type: type, resolved: false };
-      if (type === "hazard") tile.hazard = game.hazards[Math.floor(Math.random() * game.hazards.length)];
-      return tile;
-    });
-    game.tileIndex = 0;
-    Array.prototype.slice.call(els.trailWrap.querySelectorAll(".tile")).forEach(function (t) { t.remove(); });
-    var points = [];
-    game.tileEls = game.tiles.map(function (tile, i) {
-      var pos = tilePosition(i, game.tiles.length);
-      points.push(pos);
-      var d = document.createElement("div");
-      d.className = "tile mystery" + (tile.type === "gate" ? " gate" : "");
-      d.style.left = pos.x + "%";
-      d.style.top = pos.y + "%";
-      d.textContent = TILE_ICON.mystery;
-      els.trailWrap.appendChild(d);
-      return d;
-    });
-    var d = points.map(function (p, i) { return (i === 0 ? "M" : "L") + p.x + "," + p.y; }).join(" ");
-    els.trailPath.setAttribute("d", d);
-    els.trailPathBg.setAttribute("d", d);
-    updateCurrentTileHighlight();
-    positionPet();
+  function setPetLane(lane, animate) {
+    game.lane = lane;
+    els.pet.style.left = LANE_X[lane] + "%";
+    if (animate) {
+      els.pet.classList.remove("step");
+      void els.pet.offsetWidth;
+      els.pet.classList.add("step");
+    }
   }
 
   function startJourney() {
     var typedName = els.nameInput.value.trim();
-    var memoriesText = els.memoryInput.value;
     game.petName = typedName || "your friend";
-    game.personalPrompts = memoriesText.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
-    saveIdentity(typedName, memoriesText);
+    saveIdentity(typedName);
     els.hudName.textContent = game.petName;
     game.levelIndex = 0;
+    game.progress = 0;
     game.love = 0;
-    game.bonesCollected = 0;
+    game.fallItems.forEach(function (it) { it.el.remove(); });
+    game.fallItems = [];
     els.toastLayer.innerHTML = "";
 
     game.perk = game.breed ? game.breed.perk : null;
     game.hazards = (game.petKind === "dog" || game.petKind === "cat") ? HAZARDS_BY_SPECIES[game.petKind] : null;
-    game.doubleStepChance = 0;
-    game.hazardDodgeChance = 0;
-    game.bonusStarChance = 0;
+    game.laneSpeedMult = 1;
+    game.catchBonus = 0;
+    game.starRateBonus = 0;
     game.heartValue = 2;
     if (game.perk) {
-      if (game.perk.key === "laneSpeed") game.doubleStepChance = Math.min(0.3, (1 - game.perk.value) * 0.5);
-      else if (game.perk.key === "catchWindow") game.hazardDodgeChance = 0.35;
-      else if (game.perk.key === "starRate") game.bonusStarChance = game.perk.value;
+      if (game.perk.key === "laneSpeed") game.laneSpeedMult = game.perk.value;
+      else if (game.perk.key === "catchWindow") game.catchBonus = game.perk.value;
+      else if (game.perk.key === "starRate") game.starRateBonus = game.perk.value;
       else if (game.perk.key === "heartValue") game.heartValue = game.perk.value;
     }
+    els.pet.style.transitionDuration = (0.22 * game.laneSpeedMult) + "s";
 
-    buildChapterTiles(0);
+    setPetLane(1, false);
     applyLevel(0);
     hide(els.start);
     hide(els.finale);
     hide(els.pauseScreen);
     game.running = true;
     game.paused = false;
-    game.stepping = false;
-    els.stepBtn.disabled = false;
+    game.lastSpawn = 0;
+    game.lastFrame = performance.now();
+    requestAnimationFrame(loop);
     try {
-      setGlyph(els.petGlyph, game.petKind, game.breed);
+      setGlyph(els.pet, game.petKind, game.breed);
       setGlyph(els.hudPet, game.petKind, game.breed);
     } catch (e) {}
   }
@@ -1762,10 +1259,32 @@
   function hide(el) { el.classList.add("hidden"); }
   function show(el) { el.classList.remove("hidden"); }
 
-  function showToast(text) {
+  function spawnItem() {
+    var lane = Math.floor(Math.random() * 3);
+    var roll = Math.random();
+    var type = "bone";
+    var hazard = null;
+    if (game.hazards && game.levelIndex >= 1 && roll < 0.12) {
+      type = "hazard";
+      hazard = game.hazards[Math.floor(Math.random() * game.hazards.length)];
+    } else if (roll > 0.9 - game.starRateBonus) {
+      type = "star";
+    } else if (roll > 0.68) {
+      type = "heart";
+    }
+    var el = document.createElement("div");
+    el.className = "falling";
+    el.style.left = LANE_X[lane] + "%";
+    el.style.top = "-30px";
+    el.textContent = type === "bone" ? "🦴" : type === "heart" ? "💗" : type === "star" ? "⭐" : hazard.emoji;
+    els.items.appendChild(el);
+    game.fallItems.push({ el: el, lane: lane, y: -30, type: type, hazard: hazard });
+  }
+
+  function showHazardToast(hazard) {
     var toast = document.createElement("div");
     toast.className = "hazard-toast";
-    toast.textContent = text;
+    toast.textContent = hazard.emoji + " " + hazard.blurb;
     els.toastLayer.innerHTML = "";
     els.toastLayer.appendChild(toast);
     setTimeout(function () {
@@ -1774,119 +1293,65 @@
   }
 
   function hazardCaught(hazard) {
-    els.petGlyph.classList.remove("flinch");
-    void els.petGlyph.offsetWidth;
-    els.petGlyph.classList.add("flinch");
-    showToast(hazard.emoji + " " + hazard.blurb);
+    els.pet.classList.remove("flinch");
+    void els.pet.offsetWidth;
+    els.pet.classList.add("flinch");
+    showHazardToast(hazard);
   }
 
-  function burstSparkle() {
-    var pos = tilePosition(Math.max(0, game.tileIndex), game.tiles.length);
+  function burstSparkle(xPercent, y) {
     for (var i = 0; i < 4; i++) {
       var sp = document.createElement("div");
       sp.className = "sparkle";
       sp.textContent = "✨";
-      sp.style.left = (pos.x + (Math.random() * 8 - 4)) + "%";
-      sp.style.top = pos.y + "%";
-      els.trailWrap.appendChild(sp);
+      sp.style.left = (xPercent + (Math.random() * 10 - 5)) + "%";
+      sp.style.top = y + "px";
+      els.items.appendChild(sp);
       (function (node) {
         setTimeout(function () { node.remove(); }, 750);
       })(sp);
     }
   }
 
-  function resolveTile(tile, index) {
-    tile.resolved = true;
-    var el = game.tileEls[index];
-    el.classList.remove("mystery");
-    el.classList.add("visited");
-    el.textContent = tile.type === "hazard" ? tile.hazard.emoji : TILE_ICON[tile.type];
-
-    if (tile.type === "bone") {
-      game.bonesCollected++;
-      burstSparkle();
-      if (Math.random() < game.bonusStarChance) {
-        game.love += 3;
-        showToast("⭐ Found a lucky star along the way!");
-      }
-    } else if (tile.type === "heart") {
-      game.love += game.heartValue;
-      burstSparkle();
-    } else if (tile.type === "star") {
-      game.love += 3;
-      burstSparkle();
-    } else if (tile.type === "memory") {
-      showToast("💭 " + pickMemoryPrompt());
-    } else if (tile.type === "hazard") {
-      if (Math.random() < game.hazardDodgeChance) {
-        showToast("✨ Tiptoed right past it.");
-      } else {
-        hazardCaught(tile.hazard);
-      }
-    } else if (tile.type === "gate") {
-      burstSparkle();
-    }
-    updateHudFill();
-  }
-
-  function maybeDoubleStep() {
-    var next = game.tiles[game.tileIndex];
-    if (game.doubleStepChance > 0 && next && next.type !== "gate" && Math.random() < game.doubleStepChance) {
-      setTimeout(stepForward, 180);
-    }
-  }
-
-  function stepForward() {
-    if (!game.running || game.paused || game.stepping) return;
-    var tile = game.tiles[game.tileIndex];
-    if (!tile) return;
-    game.stepping = true;
-    els.stepBtn.disabled = true;
-    els.petGlyph.classList.remove("step");
-    void els.petGlyph.offsetWidth;
-    els.petGlyph.classList.add("step");
-    resolveTile(tile, game.tileIndex);
-
-    if (tile.type === "gate") {
-      setTimeout(function () {
-        game.stepping = false;
-        advanceLevel();
-      }, 550);
+  function collect(item) {
+    item.el.remove();
+    if (item.type === "hazard") {
+      hazardCaught(item.hazard);
       return;
     }
-
-    setTimeout(function () {
-      game.tileIndex++;
-      updateCurrentTileHighlight();
-      positionPet();
-    }, 300);
-
-    setTimeout(function () {
-      game.stepping = false;
-      els.stepBtn.disabled = false;
-      maybeDoubleStep();
-    }, 750);
+    if (item.type === "bone") {
+      game.progress++;
+    } else if (item.type === "heart") {
+      game.love += game.heartValue;
+    } else {
+      game.love += 3;
+    }
+    burstSparkle(LANE_X[item.lane], els.stage.clientHeight - 150);
+    updateHudFill();
+    var level = LEVELS[game.levelIndex];
+    if (item.type === "bone" && game.progress >= level.target) {
+      advanceLevel();
+    }
   }
 
   function advanceLevel() {
     game.levelIndex++;
+    game.progress = 0;
     if (game.levelIndex >= LEVELS.length) {
       showFinale();
       return;
     }
     var level = LEVELS[game.levelIndex];
-    buildChapterTiles(game.levelIndex);
     applyLevel(game.levelIndex);
     els.levelupEmoji.textContent = level.emoji;
     els.levelupTitle.textContent = level.name;
     els.levelupText.textContent = game.petName + " wanders on, a little further along.";
     show(els.levelup);
     game.paused = true;
-    els.stepBtn.disabled = true;
     setTimeout(function () {
       hide(els.levelup);
       game.paused = false;
-      els.stepBtn.disabled = false;
+      game.lastFrame = performance.now();
     }, 1700);
   }
 
@@ -1930,20 +1395,66 @@
   function showFinale() {
     game.running = false;
     buildArc();
+    var totalBones = LEVELS.reduce(function (s, l) { return s + l.target; }, 0);
     els.finaleTitle.textContent = "Welcome home, " + game.petName + ".";
-    els.finaleText.textContent = "Warm light, wagging tails, and old friends came out to meet " + game.petName + " at the gate — nobody arrives alone. Every one of the " + game.bonesCollected + " bones gathered was really just a little piece of the love you gave, carried all the way there, plus " + game.love + " small moments of love besides.";
-    addMemory();
-    els.finaleMemoryBadge.textContent = "📖 Added to your Memory Book";
+    els.finaleText.textContent = "Warm light, wagging tails, and old friends came out to meet " + game.petName + " at the gate — nobody arrives alone. Every one of the " + totalBones + " bones gathered was really just a little piece of the love you gave, carried all the way there, plus " + game.love + " small moments of love besides.";
     show(els.finale);
   }
 
-  els.stepBtn.addEventListener("click", stepForward);
-  document.addEventListener("keydown", function (e) {
-    if (!game.running || game.paused) return;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "Enter") {
-      e.preventDefault();
-      stepForward();
+  function loop(now) {
+    if (!game.running) return;
+    var dt = now - game.lastFrame;
+    els.hudLevel.textContent = LEVELS[game.levelIndex] ? LEVELS[game.levelIndex].name : els.hudLevel.textContent;
+
+    if (!game.paused) {
+      game.lastFrame = now;
+      game.lastSpawn += dt;
+      if (game.lastSpawn > game.spawnInterval) {
+        game.lastSpawn = 0;
+        spawnItem();
+      }
+      var stageH = els.stage.clientHeight;
+      var catchY = stageH - 128;
+      for (var i = game.fallItems.length - 1; i >= 0; i--) {
+        var item = game.fallItems[i];
+        item.y += (game.fallSpeed * dt) / 1000;
+        item.el.style.top = item.y + "px";
+        if (item.y > catchY - 26 - game.catchBonus && item.y < catchY + 30 + game.catchBonus && item.lane === game.lane) {
+          game.fallItems.splice(i, 1);
+          collect(item);
+          continue;
+        }
+        if (item.y > stageH + 20) {
+          item.el.remove();
+          game.fallItems.splice(i, 1);
+        }
+      }
+    } else {
+      game.lastFrame = now;
     }
+    requestAnimationFrame(loop);
+  }
+
+  function moveLane(lane) {
+    if (!game.running || game.paused) return;
+    if (lane === game.lane) return;
+    setPetLane(lane, true);
+  }
+
+  els.laneZones.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      moveLane(parseInt(btn.getAttribute("data-lane"), 10));
+    });
+  });
+  els.pawBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      moveLane(parseInt(btn.getAttribute("data-lane"), 10));
+    });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!game.running) return;
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveLane(Math.max(0, game.lane - 1));
+    else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveLane(Math.min(2, game.lane + 1));
   });
 
   els.beginBtn.addEventListener("click", startJourney);
@@ -1954,13 +1465,12 @@
   els.pauseBtn.addEventListener("click", function () {
     if (!game.running) return;
     game.paused = true;
-    els.stepBtn.disabled = true;
     show(els.pauseScreen);
   });
   els.resumeBtn.addEventListener("click", function () {
     hide(els.pauseScreen);
     game.paused = false;
-    els.stepBtn.disabled = false;
+    game.lastFrame = performance.now();
   });
 
   els.againBtn.addEventListener("click", function () {
@@ -1970,7 +1480,6 @@
   els.newPetBtn.addEventListener("click", function () {
     hide(els.finale);
     game.running = false;
-    els.toastLayer.innerHTML = "";
     stepStack = [];
     showStep("step-species", false);
     show(els.start);
